@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* 커스텀 테마가 필요한 경우 CSS 안에서 해결 */
+@theme {
+  --color-brand: #3b82f6;
+}
