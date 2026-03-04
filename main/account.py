@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, request
 
 bp = Blueprint('account', __name__)
 
@@ -6,6 +6,16 @@ bp = Blueprint('account', __name__)
 def loginpage():
     return render_template('loginpage.html')
 
-@bp.route("/login/access")
-def login():
-    return "로그인 되었습니다"
+@bp.route("/auth")
+def auth():
+
+    return
+
+# 임시로 회원가입
+@bp.route("/user/post", methods=['POST'])
+def register():
+    id_receive = request.json['input_id']
+    pw_receive = request.json['input_pwd']
+
+
+    return
