@@ -1,5 +1,5 @@
 from flask_jwt_extended import *
-from flask import render_template, Blueprint, request, jsonify
+from flask import render_template, Blueprint, request, jsonify, make_response
 from db import db
 
 bp = Blueprint('account', __name__)
@@ -46,9 +46,19 @@ def login():
         })
     
     access_token = create_access_token(identity=id_receive, expires_delta=None)
+    refresh_token = create_refresh_token(identity=id_receive, expires_delta=None)
+
+    response = make_response(jsonify({
+        'result': 'success',
+        'msg': f'정상 작동',
+    }))
+
+    response.set_cookie
+
 
     return jsonify({
         'result': 'success',
         'msg': f'정상 전달 {value}',
-        'token': access_token
+        'access_token': access_token,
+        'refresh_token': refresh_token
     })
