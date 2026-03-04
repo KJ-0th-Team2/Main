@@ -1,4 +1,6 @@
-from flask import render_template, Blueprint, request
+from flask_jwt_extended import *
+from flask import render_template, Blueprint, request, jsonify
+from db import db
 
 bp = Blueprint('account', __name__)
 
@@ -21,7 +23,32 @@ def auth():
 
 #     return
 
-@bp.route("/auth/login")
+@bp.route("/auth/login", methods=['POST'])
 def login():
     # TODO JWT 인증키는 app.py에서 정의
-    return
+    id_receive = request.json['input_id']
+    pw_receive = request.json['input_pwd']
+
+    # 아이디 검증
+    # 입력받은 아이디가 실제로 존재하는 값인지 조회
+    value = db.user.find_one({"username":f"{id_receive}"})
+
+    if value is None:
+        return jsonify({
+            'result': 'fail',
+            'msg': 'ID가 없습니다'
+        })
+    
+    if (pw_receive != value['password']):
+        return jsonify ({
+            'result': 'fail',
+            'msg': 'pw 불일치'
+        })
+    
+    access_token = create_access_token(identity=id_receive, expires_delta=None)
+
+    return jsonify({
+        'result': 'success',
+        'msg': f'정상 전달 {value}',
+        'token': access_token
+    })

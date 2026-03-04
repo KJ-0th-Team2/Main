@@ -12,16 +12,39 @@
   <body>
     <h1>main1</h1>
     <div>
-      <input id="user-id" placeholder="아이디 입력" />
-      <input id="user-pw" placeholder="패스워드 입력" />
+      <input type="text" id="user-id" placeholder="아이디 입력" />
+      <input type="password" id="user-pw" placeholder="패스워드 입력" />
       <button id="login-button">로그인</button>
     </div>
     <button type="button" class="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Tertiary</button>
     <script>
       const loginButton = document.getElementById("login-button");
 
-      loginButton.addEventListener("click", function() {
+      loginButton.addEventListener("click", async function() {
         console.log("로그인버튼 누름")
+
+        const username = document.getElementById("user-id").value;
+        const userpass = document.getElementById("user-pw").value;
+        
+        const response = await fetch("/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify ({
+            input_id:username,
+            input_pwd:userpass
+          })
+        })
+        const jsonData = await response.json();
+          console.log(jsonData);
+          
+          // 응답 처리
+          if (jsonData.result === "success") {
+              alert("로컬 보관 쿠키 " + jsonData.msg);
+          } else {
+              alert("로그인 실패");
+          }
       });
     </script>
   </body>

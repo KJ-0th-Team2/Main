@@ -1,12 +1,10 @@
 from flask import Flask
-from pymongo import MongoClient
+from db import db
 from main import common, account
 from flask_jwt_extended import *
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)
-db = client.jungle_wiki
 
 app.config.update(
     DEBUG = True,
@@ -21,8 +19,7 @@ app.register_blueprint(account.bp)
 user = list(db.user.find({}))
 
 if not user:
-    # TODO 이 경우에 유저 하나 생성하기
-    
+    # 반환값 없으면 유저 하나 만들기
     user_data = {
         '_id' : 1,
         'username' : 'test',
