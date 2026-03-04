@@ -1,6 +1,6 @@
 from flask import Flask
-from main import common, account
 from pymongo import MongoClient
+from main import common, account
 
 app = Flask(__name__)
 
