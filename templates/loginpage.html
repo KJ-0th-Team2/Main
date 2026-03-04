@@ -11,6 +11,18 @@
   </head>
   <body>
     <h1>main1</h1>
+    <div>
+      <input id="user-id" placeholder="아이디 입력" />
+      <input id="user-pw" placeholder="패스워드 입력" />
+      <button id="login-button">로그인</button>
+    </div>
     <button type="button" class="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Tertiary</button>
+    <script>
+      const loginButton = document.getElementById("login-button");
+
+      loginButton.addEventListener("click", function() {
+        console.log("로그인버튼 누름")
+      });
+    </script>
   </body>
 </html>

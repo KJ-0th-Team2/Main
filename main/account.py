@@ -11,11 +11,17 @@ def auth():
 
     return
 
-# 임시로 회원가입
-@bp.route("/user/post", methods=['POST'])
-def register():
-    id_receive = request.json['input_id']
-    pw_receive = request.json['input_pwd']
+# 회원가입 기능 임시 비활성화
+
+# @bp.route("/user/post", methods=['POST'])
+# def register():
+#     id_receive = request.json['input_id']
+#     pw_receive = request.json['input_pwd']
 
 
+#     return
+
+@bp.route("/auth/login")
+def login():
+    # TODO JWT 인증키는 app.py에서 정의
     return
