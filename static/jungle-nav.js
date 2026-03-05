@@ -10,6 +10,11 @@ class JungleNav extends HTMLElement {
   static get observedAttributes() {
     return ["logo-text", "logo-href", "active-page"];
   }
+  constructor() {
+    super();
+    this._escBound = false;
+    this._notifications = [];
+  }
 
   connectedCallback() {
     this._render();
@@ -18,11 +23,13 @@ class JungleNav extends HTMLElement {
   attributeChangedCallback() {
     this._render();
   }
-
+  _unreadCount() {
+    return this._notifications.filter(n => !n.read).length;
+  }
   _render() {
     const logoText = this.getAttribute("logo-text") || "정글 위키";
     const logoHref = this.getAttribute("logo-href") || "/";
-
+    const unread   = this._unreadCount();
     this.innerHTML = `
       <!-- ── 모달 오버레이 ── -->
       <div id="jn-modal-overlay"
@@ -37,13 +44,38 @@ class JungleNav extends HTMLElement {
         <a href="${logoHref}" class="font-bold text-xl text-gray-900 no-underline">${logoText}</a>
         <div class="flex items-center gap-x-8">
           <!-- 알림 -->
-          <a href="#" class="text-gray-500 hover:text-blue-600">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke-width="1.5" stroke="currentColor" class="size-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-            </svg>
-          </a>
+                      <div class="relative" id="jn-noti-wrapper">
+            <button id="jn-noti-btn"
+              class="relative text-gray-500 hover:text-blue-600 bg-transparent border-none cursor-pointer flex items-center"
+              aria-label="알림">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+              </svg>
+              ${unread > 0 ? `
+              <span id="jn-noti-badge"
+                class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                ${unread > 9 ? '9+' : unread}
+              </span>` : ''}
+            </button>
+
+            <!-- 알림 팝업 -->
+            <div id="jn-noti-popup"
+              class="hidden absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <span class="text-sm font-semibold text-gray-800">알림</span>
+                ${unread > 0 ? `
+                <button id="jn-noti-read-all"
+                  class="text-xs text-blue-500 hover:text-blue-700 bg-transparent border-none cursor-pointer">
+                  모두 읽음
+                </button>` : ''}
+              </div>
+              <ul id="jn-noti-list" class="max-h-72 overflow-y-auto divide-y divide-gray-50">
+                ${this._renderNotificationItems()}
+              </ul>
+            </div>
+          </div>
           <!-- 검색 -->
           <a href="#" id="jn-search-trigger" class="text-gray-500 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -101,16 +133,49 @@ class JungleNav extends HTMLElement {
       if (e.target === overlay) this._closeModal();
     });
 
+    // 알림 버튼 토글
+    this.querySelector('#jn-noti-btn')
+      .addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._toggleNotiPopup();
+      });
+
+    // 모두 읽음 버튼
+    const readAllBtn = this.querySelector('#jn-noti-read-all');
+    if (readAllBtn) {
+      readAllBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._markAllRead();
+      });
+    }
+
+    // 개별 알림 클릭 → 읽음 처리
+    this.querySelectorAll('.jn-noti-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = Number(item.dataset.id);
+        this._markRead(id);
+      });
+    });
+    // 팝업 바깥 클릭 시 닫기
+    document.addEventListener('click', (e) => {
+      const wrapper = this.querySelector('#jn-noti-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        this._closeNotiPopup();
+      }
+    });
+
     // ESC 키 (중복 등록 방지)
     if (!this._escBound) {
       this._escHandler = (e) => {
-        if (e.key === "Escape") this._closeModal();
+        if (e.key === "Escape") {
+          this._closeModal();
+          this._closeNotiPopup();
+        }
       };
       document.addEventListener("keydown", this._escHandler);
       this._escBound = true;
     }
-
-    // 쿼리셀렉터로 토큰 테스트
+        // 쿼리셀렉터로 토큰 테스트
     this.querySelector('#token-test').addEventListener('click', async () => {
       const access_token = localStorage.getItem('access_token')
 
@@ -148,12 +213,76 @@ class JungleNav extends HTMLElement {
         }
       }
     });
-
   }
 
   disconnectedCallback() {
     if (this._escHandler)
       document.removeEventListener("keydown", this._escHandler);
+  }
+  _renderNotificationItems() {
+    if (this._notifications.length === 0) {
+      return `<li class="px-4 py-8 text-center text-sm text-gray-400">새로운 알림이 없습니다.</li>`;
+    }
+    return this._notifications.map(n => `
+      <li data-id="${n.id}"
+        class="jn-noti-item flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors
+               ${n.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 hover:bg-blue-100'}">
+        <span class="mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${n.read ? 'bg-transparent' : 'bg-blue-500'}"></span>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-gray-800">
+            <span class="font-semibold">${n.commenter}</span>님이
+            <span class="font-semibold">'${n.postTitle}'</span>에 댓글을 남겼습니다.
+          </p>
+          <p class="text-xs text-gray-400 mt-0.5">${n.time}</p>
+        </div>
+      </li>
+    `).join('');
+  }
+  /* ── 알림 팝업 ── */
+  _toggleNotiPopup() {
+    const popup = this.querySelector('#jn-noti-popup');
+    popup.classList.toggle('hidden');
+  }
+
+  _closeNotiPopup() {
+    const popup = this.querySelector('#jn-noti-popup');
+    if (popup) popup.classList.add('hidden');
+  }
+
+  _markRead(id) {
+    const noti = this._notifications.find(n => n.id === id);
+    if (noti) {
+      noti.read = true;
+      this._render(); // 뱃지·스타일 갱신
+      // 팝업 다시 열기
+      const popup = this.querySelector('#jn-noti-popup');
+      if (popup) popup.classList.remove('hidden');
+    }
+  }
+
+  _markAllRead() {
+    this._notifications.forEach(n => n.read = true);
+    this._render();
+    const popup = this.querySelector('#jn-noti-popup');
+    if (popup) popup.classList.remove('hidden');
+  }
+
+  /**
+   * 외부에서 알림을 추가할 때 호출
+   * @param {{ id, postTitle, commenter, time }} noti
+   */
+  addNotification(noti) {
+    this._notifications.unshift({ ...noti, read: false });
+    this._render();
+  }
+
+  /**
+   * 외부에서 알림 목록 전체를 교체할 때 호출 (API 연동용)
+   * @param {Array} list
+   */
+  setNotifications(list) {
+    this._notifications = list;
+    this._render();
   }
 
   /* ── 모달 ── */
@@ -303,9 +432,7 @@ class JungleNav extends HTMLElement {
           }),
         );
         alert(`${id}님, 환영합니다!`);
-
         localStorage.setItem("access_token", data.access_token);
-        
         this._closeModal();
       } else {
         // 💡 alert 대신 화면에 빨간 메시지 출력
