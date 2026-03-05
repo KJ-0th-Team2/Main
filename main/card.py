@@ -19,10 +19,14 @@ def get_cards():
     field, order = SORT_MAP.get(sort_param, ("created_at", -1))
     try:
         cards = list(db.jungle_wiki.find({}).sort(field, order))
-        return jsonify({"result": "success", "data": serialize_id(cards)}), 200
+        # return jsonify({"result": "success", "data": serialize_id(cards)}), 200
+        # jinja2
+        return render_template("cards.html", cards=serialize_id(cards)),200
     except Exception as e:
         print(e)
-        return jsonify({"result": "fail", "msg": "서버 오류"}), 500
+        #return jsonify({"result": "fail", "msg": "서버 오류"}), 500
+        # jinja2
+        return render_template("error.html", msg="서버 오류"), 500
 
 @bp.route("/cards", methods=["POST"])
 # 로그인 상태 데코레이터함수 넣기
