@@ -4,156 +4,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>정글위키</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="/static/jungle-nav.js"></script>
 </head>
 
-<body>
+<body class="bg-gray-50">
 
   <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
 
-  <div class="w-full max-w-md mt-10 ml-10">
-    <div class="flex gap-x-8 border-b border-gray-200" role="tablist">
-      <button onclick="switchTab(event, 'theory-content')"
-        class="tab-link group relative flex items-center gap-x-2 pb-4 text-lg font-bold text-gray-900 transition-all cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="lucide lucide-bookmark">
-          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-        </svg>
-        <span>이론</span>
-        <span class="indicator absolute bottom-0 left-0 h-0.5 w-full bg-gray-900"></span>
-      </button>
-
-      <button onclick="switchTab(event, 'project-content')"
-        class="tab-link group relative flex items-center gap-x-2 pb-4 text-lg font-medium text-gray-400 hover:text-gray-600 transition-all cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="lucide lucide-user">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-        <span>프로젝트</span>
-        <span class="indicator absolute bottom-0 left-0 h-0.5 w-full bg-transparent"></span>
-      </button>
-    </div>
-
-    <div class="mt-6">
-      <div id="theory-content" class="tab-pane block animate-in fade-in duration-300"></div>
-      <div id="project-content" class="tab-pane hidden animate-in fade-in duration-300"></div>
-    </div>
-  </div>
-
-  <div class="flex justify-end px-6 mt-4 md:mt-0">
-    <form class="recent">
-      <select required
-        class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors">
-        <option value="" disabled selected>최신순</option>
-        <option value="old">오래된순</option>
-      </select>
-    </form>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-
-    <div
-      class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 cursor-pointer">
-      <div class="p-5 flex-1">
-        <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-        <p class="mt-2 text-gray-600">내용입니다.</p>
-      </div>
-      <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-        <div class="flex items-center gap-x-1.5 text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-y-4 border-b border-gray-200 pb-4">
+      <div class="flex gap-x-8" role="tablist">
+        <button onclick="switchTab(event, 'theory-content')"
+          class="tab-link group relative flex items-center gap-x-2 pb-4 text-lg font-bold text-gray-900 transition-all cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-bookmark">
+            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
           </svg>
-          <span class="text-sm font-medium">2</span>
+          <span>이론</span>
+          <span class="indicator absolute bottom-0 left-0 h-0.5 w-full bg-gray-900"></span>
+        </button>
+
+        <button onclick="switchTab(event, 'project-content')"
+          class="tab-link group relative flex items-center gap-x-2 pb-4 text-lg font-medium text-gray-400 hover:text-gray-600 transition-all cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-user">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>프로젝트</span>
+          <span class="indicator absolute bottom-0 left-0 h-0.5 w-full bg-transparent"></span>
+        </button>
+      </div>
+
+      <div class="flex justify-end pb-2">
+        <form class="recent">
+          <select onchange="location.href='?sort=' + this.value"
+            class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors bg-white">
+            <option value="latest" {% if request.args.get('sort', 'latest' )=='latest' %}selected{% endif %}>최신순
+            </option>
+            <option value="old" {% if request.args.get('sort')=='old' %}selected{% endif %}>오래된순</option>
+          </select>
+        </form>
+      </div>
+    </div>
+    <div class="mt-8">
+      <div id="theory-content" class="tab-pane block animate-in fade-in duration-300">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for card in cards %}
+          <div data-id="{{ card._id }}"
+            class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 hover:shadow-md cursor-pointer overflow-hidden">
+            <div class="px-5 py-4 bg-gray-50/30">
+              <h3 class="text-lg font-bold text-gray-900 line-clamp-1">{{ card.title }}</h3>
+            </div>
+            <div class="border-t border-gray-100"></div>
+            <div class="p-5 flex-1">
+              <p class="text-gray-600 text-sm line-clamp-3 leading-relaxed">{{ card.content }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div id="project-content" class="tab-pane hidden animate-in fade-in duration-300">
+        <div class="text-center py-20 text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
+          프로젝트 관련 위키 카드가 없습니다.
         </div>
       </div>
     </div>
+  </main>
 
-    <div
-      class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 cursor-pointer">
-      <div class="p-5 flex-1">
-        <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-        <p class="mt-2 text-gray-600">내용입니다.</p>
-      </div>
-      <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-        <div class="flex items-center gap-x-1.5 text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-          </svg>
-          <span class="text-sm font-medium">2</span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 cursor-pointer">
-      <div class="p-5 flex-1">
-        <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-        <p class="mt-2 text-gray-600">내용입니다.</p>
-      </div>
-      <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-        <div class="flex items-center gap-x-1.5 text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-          </svg>
-          <span class="text-sm font-medium">2</span>
-        </div>
-      </div>
-    </div>
-
-
-    <div
-      class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 cursor-pointer">
-      <div class="p-5 flex-1">
-        <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-        <p class="mt-2 text-gray-600">내용입니다.</p>
-      </div>
-      <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-        <div class="flex items-center gap-x-1.5 text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-          </svg>
-          <span class="text-sm font-medium">2</span>
-        </div>
-      </div>
-    </div>
-  </div>
   <script>
- 
+    // 탭 전환 함수
     function switchTab(e, contentId) {
-      document
-        .querySelectorAll(".tab-pane")
-        .forEach((p) => p.classList.add("hidden"));
+      // 모든 컨텐츠 숨기기
+      document.querySelectorAll(".tab-pane").forEach((p) => p.classList.add("hidden"));
 
+      // 모든 탭 스타일 초기화
       document.querySelectorAll(".tab-link").forEach((btn) => {
         btn.classList.replace("text-gray-900", "text-gray-400");
         btn.classList.replace("font-bold", "font-medium");
-        btn
-          .querySelector(".indicator")
-          .classList.replace("bg-gray-900", "bg-transparent");
+        btn.querySelector(".indicator").classList.replace("bg-gray-900", "bg-transparent");
       });
 
+      // 선택한 컨텐츠 보이기
       document.getElementById(contentId).classList.remove("hidden");
+
+      // 클릭한 탭 스타일 적용
       const activeBtn = e.currentTarget;
       activeBtn.classList.replace("text-gray-400", "text-gray-900");
       activeBtn.classList.replace("font-medium", "font-bold");
-      activeBtn
-        .querySelector(".indicator")
-        .classList.replace("bg-transparent", "bg-gray-900");
+      activeBtn.querySelector(".indicator").classList.replace("bg-transparent", "bg-gray-900");
     }
+
+    // 카드 클릭 이벤트 처리 (상세 페이지 이동 등)
+    document.querySelectorAll('[data-id]').forEach(card => {
+      card.addEventListener('click', function () {
+        const cardId = this.getAttribute('data-id');
+        // console.log("이동할 카드 ID:", cardId);
+        // location.href = '/card/' + cardId; 
+      });
+    });
   </script>
 </body>
 

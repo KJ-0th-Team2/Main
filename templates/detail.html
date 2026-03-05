@@ -10,6 +10,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="/static/jungle-nav.js"></script>
+
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 </head>
 
 <body>
@@ -59,112 +62,8 @@
 
     <hr class="border-gray-400 my-4" />
 
-    <div>
-      <h2 class="text-lg font-bold mb-3">comment</h2>
 
-      <div class="space-y-1.5" id="comment-container">
-        <div class="comment-item">
-          <div class="flex items-center text-sm group">
-            <div class="flex items-center">
-              <span class="font-bold text-gray-800 shrink-0">정글러</span>
-              <span class="text-gray-300 text-xs ml-2 font-medium shrink-0">26.3.4</span>
-              <span class="text-gray-400 mx-2 text-xs shrink-0">|</span>
-              <span class="comment-text text-gray-800">덕분에 이해했어요</span>
-            </div>
 
-            <div class="flex items-center ml-3 gap-2 font-bold select-none">
-              <button onclick="toggleReplyForm(this)" title="작성"
-                class="text-gray-400 hover:text-blue-500 cursor-pointer text-base">＋</button>
-              <button onclick="editComment(this)" title="수정"
-                class="text-gray-400 hover:text-gray-900 cursor-pointer text-[10px] border border-gray-300 px-1 rounded">EDIT</button>
-              <button title="삭제" class="text-gray-400 hover:text-red-500 cursor-pointer text-sm">×</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="comment-item ml-3">
-          <div class="flex items-center text-sm group">
-            <div class="flex items-center">
-              <span class="text-gray-500 mr-1.5 text-xs font-bold shrink-0">ㄴ</span>
-              <span class="font-bold text-gray-800 shrink-0">정글러</span>
-              <span class="text-gray-300 text-xs ml-2 font-medium shrink-0">26.3.4</span>
-              <span class="text-gray-400 mx-2 text-xs shrink-0">|</span>
-              <span class="comment-text text-gray-800">정말 유익하네요!</span>
-            </div>
-
-            <div class="flex items-center ml-3 gap-2 font-bold select-none">
-              <button onclick="toggleReplyForm(this)" title="작성"
-                class="text-gray-300 hover:text-blue-500 cursor-pointer text-base">＋</button>
-              <button onclick="editComment(this)" title="수정"
-                class="text-gray-300 hover:text-gray-900 cursor-pointer text-[9px] border border-gray-200 px-0.5 rounded">EDIT</button>
-              <button title="삭제" class="text-gray-300 hover:text-red-500 cursor-pointer text-sm">×</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <script>
-        // 1. 답글(+) 버튼 기능: 아래에 입력창 생성/삭제
-        function toggleReplyForm(btn) {
-          const commentItem = btn.closest('.comment-item');
-          let replyForm = commentItem.querySelector('.reply-form');
-
-          if (replyForm) {
-            replyForm.remove(); // 이미 있으면 닫기
-          } else {
-            replyForm = document.createElement('div');
-            replyForm.className = 'reply-form flex gap-2 mt-2 ml-4';
-            replyForm.innerHTML = `
-        <input type="text" class="flex-1 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500" placeholder="답글을 입력하세요...">
-        <button onclick="this.parentElement.remove()" class="text-xs text-blue-500 font-bold">등록</button>
-        <button onclick="this.parentElement.remove()" class="text-xs text-gray-400">취소</button>
-      `;
-            commentItem.appendChild(replyForm);
-            replyForm.querySelector('input').focus();
-          }
-        }
-
-        // 2. 수정(EDIT) 버튼 기능: 텍스트를 입력창으로 변경
-        function editComment(btn) {
-          const commentItem = btn.closest('.comment-item');
-          const textSpan = commentItem.querySelector('.comment-text');
-
-          // 이미 수정 중이면 중복 실행 방지
-          if (commentItem.querySelector('.edit-input')) return;
-
-          const currentText = textSpan.innerText;
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.value = currentText;
-          input.className = 'edit-input border-b border-blue-500 outline-none text-sm text-gray-800 ml-1 bg-blue-50';
-
-          // 기존 텍스트 숨기고 인풋 넣기
-          textSpan.style.display = 'none';
-          textSpan.parentNode.insertBefore(input, textSpan);
-          input.focus();
-
-          // 엔터 치면 저장, ESC 치면 취소
-          input.onkeydown = function (e) {
-            if (e.key === 'Enter') {
-              textSpan.innerText = input.value;
-              finishEdit();
-            } else if (e.key === 'Escape') {
-              finishEdit();
-            }
-          };
-
-          // 포커스 잃으면 자동 저장
-          input.onblur = finishEdit;
-
-          function finishEdit() {
-            textSpan.style.display = 'inline';
-            input.remove();
-          }
-        }
-      </script>
-    </div>
-
-  </div>
 
 
 
