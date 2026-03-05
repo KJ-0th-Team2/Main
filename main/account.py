@@ -10,11 +10,9 @@ bp = Blueprint('account', __name__)
 # 회원가입
 @bp.route("/api/users/post", methods=['POST'])
 def register():
-    #debug
     member_id = request.json.get('input_num')
     id_receive = request.json.get('input_id')
     pw_receive = request.json.get('input_pwd')
-
 
     if member_id is None or id_receive is None or pw_receive is None:
         return jsonify({
