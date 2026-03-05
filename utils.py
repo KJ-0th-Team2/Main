@@ -1,3 +1,6 @@
+# from utils import serialize_id 
+# serialize_id(직렬화할 값)
+
 # ObjdectId 직렬화 
 def serialize_id(data):
     if isinstance(data,list):
