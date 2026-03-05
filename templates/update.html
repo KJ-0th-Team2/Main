@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>정글위키</title>
+    <style>
+      .recent {
+        position: absolute;
+        right: 50px;
+        top: 120px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <nav class="flex justify-between p-6 bg-white shadow">
+      <div class="font-bold text-xl">정글 위키</div>
+      <div class="hidden lg:flex gap-x-8">
+        <a href="#" class="hover:text-blue-600"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+            />
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-600"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-600">로그인</a>
+      </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto p-10 font-sans text-gray-900">
+      <div class="flex justify-between items-baseline mb-8">
+        <h1 class="text-5xl font-extrabold tracking-tight">JWT</h1>
+        <div class="text-gray-400 text-sm">
+          <span>수정일 26.03.04</span>
+          <span class="ml-2">v1</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8 mb-4">
+        <div class="flex-1 flex flex-col justify-between min-h-[250px]">
+          <textarea
+            placeholder="이론입니다. 어쩌구 저쩌구 이론입니다. 어쩌구 저쩌구"
+            class="w-full min-h-[350px] bg-gray-100 outline-none p-10 text-gray-800 placeholder-gray-500 resize-y leading-relaxed"
+          ></textarea>
+
+          <div class="flex justify-between items-center mt-4">
+            <button
+              class="rounded border border-gray-300 px-4 py-1.5 text-sm font-medium hover:bg-gray-200 transition-colors"
+            >
+              수정 확인
+            </button>
+
+            <div class="flex gap-3 text-gray-700">
+              <svg
+                class="w-6 h-6 cursor-pointer hover:text-gray-900"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                ></path>
+              </svg>
+              <svg
+                class="w-6 h-6 cursor-pointer hover:text-gray-900"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="w-full md:w-52 border border-dashed border-gray-400 rounded-md p-5 h-max"
+        >
+          <h3 class="text-sm font-bold mb-3 text-gray-800">같이 본 키워드</h3>
+          <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+            <li>session</li>
+            <li>cookie</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="border-gray-400 my-4" />
+
+      <div>
+        <h2 class="text-lg font-bold mb-3">comment</h2>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center text-sm">
+            <span class="font-bold text-gray-800">정글러</span>
+            <span class="text-gray-300 text-xs ml-2 font-medium">26.3.4</span>
+            <span class="text-gray-400 mx-2 text-xs">|</span>
+            <span class="text-gray-800">덕분에 이해했어요</span>
+          </div>
+
+          <div class="flex items-center text-sm ml-3">
+            <span class="text-gray-500 mr-1.5 text-xs font-bold">ㄴ</span>
+            <span class="font-bold text-gray-800">정글러</span>
+            <span class="text-gray-300 text-xs ml-2 font-medium">26.3.4</span>
+            <span class="text-gray-400 mx-2 text-xs">|</span>
+            <span class="text-gray-800">덕분에 이해했어요</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

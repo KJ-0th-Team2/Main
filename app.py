@@ -11,6 +11,14 @@ def index():
 def detail():
     return render_template('detail.html')
 
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+
+@app.route('/update')
+def update():
+    return render_template('update.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

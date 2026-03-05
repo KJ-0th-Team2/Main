@@ -3,22 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <title>정글위키</title>
-    <style>
-      .recent {
-        position: absolute;
-        right: 50px;
-        top: 120px;
-      }
-    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body>
     <nav class="flex justify-between p-6 bg-white shadow">
       <div class="font-bold text-xl">정글 위키</div>
       <div class="hidden lg:flex gap-x-8">
-        <!--알림-->
         <a href="#" class="hover:text-blue-600"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +28,6 @@
             />
           </svg>
         </a>
-        <!--검색-->
         <a href="#" class="hover:text-blue-600"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,10 +44,10 @@
             />
           </svg>
         </a>
-        <!--로그인-->
-        <a href="#" class="hover:text-blue-600">로그인1 </a>
+        <a href="#" class="hover:text-blue-600">로그인</a>
       </div>
     </nav>
+
     <div class="w-full max-w-md mt-10 ml-10">
       <div class="flex gap-x-8 border-b border-gray-200" role="tablist">
         <button
@@ -110,83 +102,125 @@
 
       <div class="mt-6">
         <div
-          id=""
+          id="theory-content"
           class="tab-pane block animate-in fade-in duration-300"
-        >
-          
-        </div>
+        ></div>
         <div
-          id=""
+          id="project-content"
           class="tab-pane hidden animate-in fade-in duration-300"
-        >
-          <p class="text-gray-600">
-            진행 중인 프로젝트 정보를 여기에 작성하세요.
-          </p>
-        </div>
+        ></div>
       </div>
     </div>
 
-    <form class="recent">
-      <select id="" required>
-        <option value="" disabled selected>최신순</option>
-      </select>
-    </form>
+    <div class="flex justify-end px-6 mt-4 md:mt-0">
+      <form class="recent">
+        <select
+          required
+          class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors"
+        >
+          <option value="" disabled selected>최신순</option>
+          <option value="old">오래된순</option>
+        </select>
+      </form>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-  
-    <div class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400">
-    <div class="p-5 flex-1">
-      <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-      <p class="mt-2 text-gray-600">내용입니다.</p>
-    </div>
-    <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-      <div class="flex items-center gap-x-1.5 text-gray-500">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-        </svg>
-        <span class="text-sm font-medium">2</span>
+      <div
+        class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400"
+      >
+        <div class="p-5 flex-1">
+          <h3 class="text-lg font-bold text-gray-900">JWT</h3>
+          <p class="mt-2 text-gray-600">내용입니다.</p>
+        </div>
+        <div
+          class="border-t border-gray-200 px-5 py-3 flex justify-end items-center"
+        >
+          <div class="flex items-center gap-x-1.5 text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+              />
+            </svg>
+            <span class="text-sm font-medium">2</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400">
-    <div class="p-5 flex-1">
-      <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-      <p class="mt-2 text-gray-600">내용입니다.</p>
-    </div>
-    <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-      <div class="flex items-center gap-x-1.5 text-gray-500">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-        </svg>
-        <span class="text-sm font-medium">2</span>
+      <div
+        class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400"
+      >
+        <div class="p-5 flex-1">
+          <h3 class="text-lg font-bold text-gray-900">JWT</h3>
+          <p class="mt-2 text-gray-600">내용입니다.</p>
+        </div>
+        <div
+          class="border-t border-gray-200 px-5 py-3 flex justify-end items-center"
+        >
+          <div class="flex items-center gap-x-1.5 text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+              />
+            </svg>
+            <span class="text-sm font-medium">2</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400">
-    <div class="p-5 flex-1">
-      <h3 class="text-lg font-bold text-gray-900">JWT</h3>
-      <p class="mt-2 text-gray-600">내용입니다.</p>
-    </div>
-    <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
-      <div class="flex items-center gap-x-1.5 text-gray-500">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-        </svg>
-        <span class="text-sm font-medium">2</span>
-      </div>
-    </div>
-  </div>
-  
 
+      <div
+        class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400"
+      >
+        <div class="p-5 flex-1">
+          <h3 class="text-lg font-bold text-gray-900">JWT</h3>
+          <p class="mt-2 text-gray-600">내용입니다.</p>
+        </div>
+        <div
+          class="border-t border-gray-200 px-5 py-3 flex justify-end items-center"
+        >
+          <div class="flex items-center gap-x-1.5 text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+              />
+            </svg>
+            <span class="text-sm font-medium">2</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       function switchTab(e, contentId) {
-        // 1. 모든 콘텐츠 숨기기
         document
           .querySelectorAll(".tab-pane")
           .forEach((p) => p.classList.add("hidden"));
 
-        // 2. 모든 버튼 스타일 초기화
         document.querySelectorAll(".tab-link").forEach((btn) => {
           btn.classList.replace("text-gray-900", "text-gray-400");
           btn.classList.replace("font-bold", "font-medium");
@@ -195,7 +229,6 @@
             .classList.replace("bg-gray-900", "bg-transparent");
         });
 
-        // 3. 클릭된 탭 활성화
         document.getElementById(contentId).classList.remove("hidden");
         const activeBtn = e.currentTarget;
         activeBtn.classList.replace("text-gray-400", "text-gray-900");
