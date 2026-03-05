@@ -9,11 +9,6 @@ bp = Blueprint('account', __name__)
 def loginpage():
     return render_template('loginpage.html')
 
-@bp.route("/auth")
-def auth():
-
-    return
-
 # 회원가입 기능 임시 비활성화
 
 # @bp.route("/user/post", methods=['POST'])
@@ -26,6 +21,7 @@ def auth():
 
 @bp.route("/auth/refresh", methods=[])
 def refresh_token():
+    
     return
 
 @bp.route("/auth/login", methods=['POST'])

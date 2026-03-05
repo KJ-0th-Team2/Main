@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, render_template
 from db import db
-from main import common, account
+from main import common, account, path
 from flask_jwt_extended import *
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(common.bp)
 app.register_blueprint(account.bp)
+app.register_blueprint(path.bp)
 
 user = list(db.user.find({}))
 
@@ -32,14 +33,6 @@ if not user:
     print(data)
 else:
     print("이미 있음")
-
-@app.route('/upload')
-def upload():
-    return render_template('upload.html')
-
-@app.route('/update')
-def update():
-    return render_template('update.html')
 
 
 if __name__ == '__main__':
