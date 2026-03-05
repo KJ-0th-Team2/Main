@@ -44,6 +44,7 @@ class JungleNav extends HTMLElement {
         <a href="${logoHref}" class="font-bold text-xl text-gray-900 no-underline">${logoText}</a>
         <div class="flex items-center gap-x-8">
           <button id="token-test">토큰 테스트</button>
+          <button id="logout">로그아웃</button>
           <!-- 알림 -->
             <div class="relative" id="jn-noti-wrapper">
             <button id="jn-noti-btn"
@@ -176,11 +177,12 @@ class JungleNav extends HTMLElement {
       document.addEventListener("keydown", this._escHandler);
       this._escBound = true;
     }
-        // 쿼리셀렉터로 토큰 테스트
+
+    // 토큰 상태 테스트
     this.querySelector('#token-test').addEventListener('click', async () => {
       const access_token = localStorage.getItem('access_token')
 
-      const response = await fetch ('/auth/tokentest', {
+      const response = await fetch('/api/auth/tokentest', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${access_token}`,
@@ -194,27 +196,45 @@ class JungleNav extends HTMLElement {
       if (response.ok) {
         console.log('토큰 유효', data);
       } else {
-        console.log('뭔가 문제 있음');
-        console.log('재발급 요청 시작');
+        console.log('access 혹은 refresh 토큰의 공백');
+        console.log('refresh token을 이용한 access token 재발급 요청 시작');
 
-        const refresh = await fetch ('/auth/refresh', {
+        const refresh = await fetch('/api/auth/refresh', {
           method: 'POST',
           credentials: 'include'
         })
 
-        console.log("1차 검증");
-
         const refreshData = await refresh.json();
+        console.log("access token(방금 받았으니) 유무 확인");
+        console.log("여전히 401 반환시, refresh 토큰이 비었다는 의미");
 
         if (refresh.status == 401) {
-          alert('로그인을 해주세요.');
-        } else if (refresh.status == 200) {
-          alert('토큰 재발급 성공', refreshData.access_token);
+          console.log('로그인을 해주세요.');
+        }
+        // 여기에서 200코드 확인 시, 정상적으로 access token이 발급 받아졌다는 것을 의미
+        // 즉 로그인이 되어 있다고 생각
+        else if (refresh.status == 200) {
+          console.log('토큰 재발급 성공', refreshData.access_token);
           localStorage.setItem('access_token', refreshData.access_token);
         }
       }
     });
+
+      // 로그아웃 버튼
+      this.querySelector('#logout').addEventListener('click', async () => {
+          const request = await fetch('/api/auth/logout', {
+            method: "DELETE"
+          });
+
+          const data = await request.json();
+          localStorage.removeItem('access_token');
+
+          alert(data.msg);
+      });
   }
+
+
+
 
   disconnectedCallback() {
     if (this._escHandler)
@@ -418,7 +438,7 @@ class JungleNav extends HTMLElement {
     }
 
     try {
-      const res = await fetch("/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input_id: id, input_pwd: pw }),
