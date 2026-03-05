@@ -467,7 +467,7 @@ class JungleNav extends HTMLElement {
     }
   }
 
-  _handleSignup() {
+  async _handleSignup() {
     const id = this.querySelector("#jn-su-id").value.trim();
     const pw = this.querySelector("#jn-su-pw").value.trim();
     const student = this.querySelector("#jn-su-student").value.trim();
@@ -505,17 +505,36 @@ class JungleNav extends HTMLElement {
       this.querySelector("#jn-su-pw").focus(); // 입력창에 다시 포커스
       return;
     }
-
-    this.dispatchEvent(
-      new CustomEvent("jungle-signup", {
-        detail: { userId: id, studentId: student },
-        bubbles: true,
-      }),
-    );
-
-    alert(`${id}님, 회원가입 완료!`);
-    this._closeModal();
+    try{
+      const res = await fetch("/api/users/post",{
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+          input_id: id,
+          input_pwd: pw,
+          input_num: student,
+        }),
+      });
+      const data = await res.json();
+    
+      if (data.result === "success"){
+        this.dispatchEvent(
+          new CustomEvent("jungle-signup", {
+            detail: { userId: id, studentId: student },
+            bubbles: true,
+          })); 
+        alert(`${id}님, 회원가입 완료!`);
+        this._openModal("login");
+      }else{
+        idErrorEl.textContent = data.msg;
+        idErrorEl.classList.remove("hidden");
+      }
+    }
+    catch(err){
+      console.error(err);
+      idErrorEl.textContent = "서버와 통신중 오류가 발생했습니다.";
+      idErrorEl.classList.remove("hidden");
+    }
   }
 }
-
 customElements.define("jungle-nav", JungleNav);
