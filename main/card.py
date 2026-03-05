@@ -65,7 +65,7 @@ def search_card():
     if not keyword:
         return jsonify({"result":"fail", "msg":"검색어를 입력해주세요"}), 401
     try:
-        find_cards = list(db.card.find({"title":{"$regex":keyword, "#options": "i"} },{"_id":1, "title":1}))
+        find_cards = list(db.card.find({"title":{"$regex":keyword, "$options": "i"} },{"_id":1, "title":1}))
       
 
         if not find_cards:
