@@ -1,13 +1,12 @@
 from flask import render_template, Blueprint, request, jsonify
-from pymongo import MongoClient
+from db import db
 from datetime import datetime
 from utils import serialize_id
+from utils import to_object_id
 
-client = MongoClient('localhost', 27017)
-db = client.jungle_wiki
 bp = Blueprint('card',__name__)
 
-@bp.route("/cards", methods=["GET"])
+@bp.route("/api/cards", methods=["GET"])
 def get_cards():
     sort_param = request.args.get("sort","latest")
     SORT_MAP ={
@@ -23,7 +22,7 @@ def get_cards():
         print(e)
         return jsonify({"result": "fail", "msg": "서버 오류"}), 500
 
-@bp.route("/cards", methods=["POST"])
+@bp.route("/api/cards", methods=["POST"])
 # 로그인 상태 데코레이터함수 넣기
 # 로그인 상태함수 내부에는 엑세스토큰 확인하고 user_id 꺼내서 사용
 def card_post():
@@ -41,19 +40,20 @@ def card_post():
         "version":1,
         "created_at": datetime.now(),
         "comment_count":0,
+        # "projects":[]
         # "author":user_id
     }
 
-    result = db.jungle_wiki.insert_one(card)
+    
     try: 
-        result.inserted_id
+        result = db.jungle_wiki.insert_one(card)
         return jsonify({"result":"sucess", "msg":"등록이 완료되었습니다."}),200
     
     except Exception as e:
         print(e)
         return jsonify({"result":"fail", "msg":"등록 실패하였습니다."}),500
 
-@db.route("/cards/search", methods=["GET"])
+@bp.route("/api/cards/search", methods=["GET"])
 def search_card():
 
     keyword = request.args.get("keyword")
@@ -70,4 +70,9 @@ def search_card():
     except:
         return jsonify({"result":"fail", "msg":"서버오류"}),500
         
+
+
+
+
+
 
