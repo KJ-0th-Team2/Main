@@ -54,7 +54,7 @@ else:
 
     print("기존계정 지우고 해시 passwd 포함한 계정 생성")
 
-post = list(db.post.find({}))
+post = list(db.card.find({}))
 
 if not post:
     post_data = {
@@ -64,13 +64,13 @@ if not post:
         'created_at': datetime.now(timezone.utc)
     }
 
-    db.post.insert_one(post_data)
+    db.card.insert_one(post_data)
 
-    data = db.post.find_one({})
+    data = db.card.find_one({})
 
     print(data)
 else:
-    print("랜덤한 포스트 이미 있음")
+    print("카드 이미 있음")
 
 
 if __name__ == '__main__':
