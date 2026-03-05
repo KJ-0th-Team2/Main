@@ -25,10 +25,7 @@ def project_list():
 
     return render_template(
         'index.html',
-        project_cards=serialize_id(cards),
-        total = total,
-        page = page,
-        limit = limit
+        project_card="프로젝트 카드"
     )
 
 @bp.route('/api/projects/cards', methods=['POST'])

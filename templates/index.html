@@ -69,23 +69,10 @@
         </div>
       </div>
 
-      <div id="project-content" class="tab-pane hidden">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {% for card in project_cards %}
-          <div data-id="{{ card._id }}" class="...카드 스타일...">
-            <h3>{{ card.title }}</h3>
-            <p>{{ card.content }}</p>
-          </div>
-          {% endfor %}
+      <div id="project-content" class="tab-pane hidden animate-in fade-in duration-300">
+        <div class="text-center py-20 text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
+          {{ project_card }}
         </div>
-
-        <!-- 페이지네이션 -->
-        {% if page > 1 %}
-          <a href="?page={{ page - 1 }}&sort={{ sort }}">이전</a>
-        {% endif %}
-        {% if page * limit < total %}
-          <a href="?page={{ page + 1 }}&sort={{ sort }}">다음</a>
-        {% endif %}
       </div>
     </div>
   </main>

@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from datetime import timedelta, datetime, timezone
 from db import db
-from main import common, account, path,card
+from main import common, account, path, card, project
 from flask_jwt_extended import *
 import bcrypt
 
@@ -22,6 +22,7 @@ app.register_blueprint(common.bp)
 app.register_blueprint(account.bp)
 app.register_blueprint(path.bp)
 app.register_blueprint(card.bp)
+app.register_blueprint(project.bp)
 
 user = db.user.find_one({'username':'test'})
 
