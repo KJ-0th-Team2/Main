@@ -46,7 +46,7 @@
             class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors bg-white">
             <option value="latest" {% if request.args.get('sort', 'latest' )=='latest' %}selected{% endif %}>최신순
             </option>
-            <option value="old" {% if request.args.get('sort')=='old' %}selected{% endif %}>오래된순</option>
+            <option value="old" {% if request.args.get('sort')=='oldest' %}selected{% endif %}>오래된순</option>
           </select>
         </form>
       </div>
@@ -100,12 +100,12 @@
       activeBtn.querySelector(".indicator").classList.replace("bg-transparent", "bg-gray-900");
     }
 
-    // 카드 클릭 이벤트 처리 (상세 페이지 이동 등)
+    // 카드 클릭 이벤트 처리
     document.querySelectorAll('[data-id]').forEach(card => {
       card.addEventListener('click', function () {
         const cardId = this.getAttribute('data-id');
-        // console.log("이동할 카드 ID:", cardId);
-        // location.href = '/card/' + cardId; 
+        // 서버의 /card/<card_id> 경로로 이동
+        location.href = '/api/card/' + cardId;
       });
     });
   </script>
