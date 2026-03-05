@@ -1,6 +1,7 @@
 from flask import render_template, Blueprint
 
-bp = Blueprint('common', __name__)
+#
+bp = Blueprint('path', __name__)
 
 
 @bp.route('/detail')
