@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from datetime import timedelta, datetime, timezone
 from db import db
-from main import common, account, path
+from main import common, account, path,card
 from flask_jwt_extended import *
 import bcrypt
 
@@ -21,6 +21,7 @@ jwt = JWTManager(app)
 app.register_blueprint(common.bp)
 app.register_blueprint(account.bp)
 app.register_blueprint(path.bp)
+app.register_blueprint(card.bp)
 
 user = db.user.find_one({'username':'test'})
 
@@ -54,7 +55,7 @@ else:
 
     print("기존계정 지우고 해시 passwd 포함한 계정 생성")
 
-post = list(db.post.find({}))
+post = list(db.card.find({}))
 
 if not post:
     post_data = {
@@ -64,7 +65,7 @@ if not post:
         'created_at': datetime.now(timezone.utc)
     }
 
-    db.post.insert_one(post_data)
+    db.card.insert_one(post_data)
 
     data = db.post.find_one({})
 

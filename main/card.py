@@ -1,11 +1,12 @@
-from flask import render_template, Blueprint, request, jsonify
-from pymongo import MongoClient
+from flask import render_template, Blueprint, request, jsonify, make_response
+# from pymongo import MongoClient
+from db import db 
 from datetime import datetime
 from utils import serialize_id
 
-client = MongoClient('localhost', 27017)
-db = client.jungle_wiki
-bp = Blueprint('card',__name__)
+# client = MongoClient('localhost', 27017)
+# db = client.jungle_wiki
+bp = Blueprint('card', __name__)
 
 @bp.route("/cards", methods=["GET"])
 def get_cards():
@@ -31,10 +32,12 @@ def card_post():
     input_data = request.get_json()
     title = input_data.get("title")
     content = input_data.get("content")
+    print(title, content)
 
     if not title or not content:
         return jsonify({"result":"fail", "msg":"제목과 내용은 필수 항목입니다."}), 400
     
+
     card={
         "title":title,
         "content":content,
@@ -44,16 +47,18 @@ def card_post():
         # "author":user_id
     }
 
-    result = db.jungle_wiki.insert_one(card)
     try: 
-        result.inserted_id
+        print("진입")
+        print(card)
+        db.cards.insert_one(card)
+        print("진입 종료, json 준비")
         return jsonify({"result":"sucess", "msg":"등록이 완료되었습니다."}),200
     
     except Exception as e:
         print(e)
         return jsonify({"result":"fail", "msg":"등록 실패하였습니다."}),500
 
-@db.route("/cards/search", methods=["GET"])
+@bp.route("/cards/search", methods=["GET"])
 def search_card():
 
     keyword = request.args.get("keyword")
