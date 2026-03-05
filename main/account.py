@@ -8,7 +8,7 @@ import bcrypt
 bp = Blueprint('account', __name__)
 
 # 회원가입
-@bp.route("/user/post", methods=['POST'])
+@bp.route("/api/user/post", methods=['POST'])
 def register():
     member_id = request.json['input_num']
     id_receive = request.json['input_id']
@@ -47,7 +47,7 @@ def register():
         'msg': '회원가입 완료',
     }), 200
 
-@bp.route("/auth/check_id", methods=['GET'])
+@bp.route("/api/auth/check_id", methods=['GET'])
 def check_id():
     id_receive = request.args.get('query')
 
@@ -63,7 +63,7 @@ def check_id():
     }), 200
 
 # 아이디 중복확인
-@bp.route("/auth/tokentest", methods=['GET'])
+@bp.route("/api/auth/tokentest", methods=['GET'])
 # 밑에 jwt_required로 토큰 검사
 @jwt_required()
 def token_test():
@@ -74,7 +74,7 @@ def token_test():
     }), 200
 
 
-@bp.route("/auth/refresh", methods=['POST'])
+@bp.route("/api/auth/refresh", methods=['POST'])
 # jwt_required로 refresh 토큰 검사
 @jwt_required(refresh=True)
 def refresh_token():
@@ -89,7 +89,7 @@ def refresh_token():
 
 # @jwt_required는 헤더로 수신한 Access 토큰의 유효성을 검증하는 데코레이터
 # 즉 프론트엔드에서 Access_token값을 헤더로 보내야 함. Authorization
-@bp.route("/auth/login", methods=['POST'])
+@bp.route("/api/auth/login", methods=['POST'])
 def login():
     # TODO JWT 인증키는 app.py에서 정의
     id_receive = request.json['input_id']
@@ -123,18 +123,18 @@ def login():
 
     return response
 
-@bp.route("/auth/logout", methods=['DELETE'])
+@bp.route("/api/auth/logout", methods=['DELETE'])
 @jwt_required(refresh=True)
 def logout():
     response = make_response(jsonify({
         'result': 'success',
-        'msg': '로그아웃 완료'
+        'msg': '로그아웃 되었습니다.'
     }), 200)
 
     unset_refresh_cookies(response)
     return response
 
-@bp.route("/user/me", methods=['GET'])
+@bp.route("/api/user/me", methods=['GET'])
 @jwt_required()
 def login_check():
     return jsonify({"logedin": True})

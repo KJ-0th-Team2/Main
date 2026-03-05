@@ -44,6 +44,7 @@ class JungleNav extends HTMLElement {
         <a href="${logoHref}" class="font-bold text-xl text-gray-900 no-underline">${logoText}</a>
         <div class="flex items-center gap-x-8">
           <button id="token-test">토큰 테스트</button>
+          <button id="logout">로그아웃</button>
           <!-- 알림 -->
             <div class="relative" id="jn-noti-wrapper">
             <button id="jn-noti-btn"
@@ -177,11 +178,11 @@ class JungleNav extends HTMLElement {
       this._escBound = true;
     }
 
-    // 쿼리셀렉터로 토큰 테스트
+    // 토큰 상태 테스트
     this.querySelector('#token-test').addEventListener('click', async () => {
       const access_token = localStorage.getItem('access_token')
 
-      const response = await fetch ('/auth/tokentest', {
+      const response = await fetch('/api/auth/tokentest', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${access_token}`,
@@ -198,7 +199,7 @@ class JungleNav extends HTMLElement {
         console.log('access 혹은 refresh 토큰의 공백');
         console.log('refresh token을 이용한 access token 재발급 요청 시작');
 
-        const refresh = await fetch ('/auth/refresh', {
+        const refresh = await fetch('/api/auth/refresh', {
           method: 'POST',
           credentials: 'include'
         })
@@ -218,7 +219,22 @@ class JungleNav extends HTMLElement {
         }
       }
     });
+
+      // 로그아웃 버튼
+      this.querySelector('#logout').addEventListener('click', async () => {
+          const request = await fetch('/api/auth/logout', {
+            method: "DELETE"
+          });
+
+          const data = await request.json();
+          localStorage.removeItem('access_token');
+
+          alert(data.msg);
+      });
   }
+
+
+
 
   disconnectedCallback() {
     if (this._escHandler)
@@ -422,7 +438,7 @@ class JungleNav extends HTMLElement {
     }
 
     try {
-      const res = await fetch("/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input_id: id, input_pwd: pw }),
