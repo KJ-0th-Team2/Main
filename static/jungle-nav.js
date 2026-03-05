@@ -45,13 +45,16 @@ class JungleNav extends HTMLElement {
             </svg>
           </a>
           <!-- 검색 -->
-          <a href="#" class="text-gray-500 hover:text-blue-600">
+          <a href="#" id="jn-search-trigger" class="text-gray-500 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
               stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
           </a>
+                    <input type="text" id="jn-search-input"
+                class="hidden border border-gray-300 rounded px-2 py-1 ml-2"
+                placeholder="검색어를 입력하세요" />
           <!-- 로그인 -->
           <button id="jn-login-trigger"
             class="text-gray-500 hover:text-blue-600 bg-transparent border-none cursor-pointer text-base">
@@ -65,7 +68,34 @@ class JungleNav extends HTMLElement {
     this.querySelector("#jn-login-trigger").addEventListener("click", () =>
       this._openModal("login"),
     );
+    const searchTrigger = this.querySelector('#jn-search-trigger');
+    const searchInput = this.querySelector('#jn-search-input');
+    // 검색 input 토글
+    searchTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      searchInput.classList.toggle('hidden');
+      if(!searchInput.classList.contains('hidden')) searchInput.focus();
+    });
+    // 검색 Enter 이벤트
+    searchInput.addEventListener('keydown', async (e) => {
+      if(e.key === 'Enter'){
+        const keyword = searchInput.value.trim();
+        if(keyword){
+          console.log('검색어:',keyword);
+          // 여기에 AJAX 호출 넣으면 서버 검색 가능
+          // 예시: await fetch(`/search?keyword=${keyword}`)
+        }
+        searchInput.value='';
+        searchInput.classList.add('hidden');
+      }
+    });
 
+    document.addEventListener('click', (e) =>{
+      const isClickInside = this.contains(e.target);
+      if(!isClickInside){
+        searchInput.classList.add('hidden');
+      }
+    });
     const overlay = this.querySelector("#jn-modal-overlay");
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) this._closeModal();
