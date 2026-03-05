@@ -12,8 +12,7 @@ def get_cards():
     sort_param = request.args.get("sort","latest")
     SORT_MAP ={
         "latest": ("created_at", -1),
-        "views": ("view_count",-1),
-        "comments" :("comment_count", -1)
+        "views": ("view_count",-1)
     }
     field, order = SORT_MAP.get(sort_param, ("created_at", -1))
     try:
