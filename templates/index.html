@@ -39,8 +39,8 @@
           <span class="indicator absolute bottom-0 left-0 h-0.5 w-full bg-transparent"></span>
         </button>
       </div>
-
       <div class="flex justify-end pb-2">
+        <button id="post-card">게시글 등록</button>
         <form class="recent">
           <select onchange="location.href='?sort=' + this.value"
             class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors bg-white">
@@ -70,8 +70,20 @@
       </div>
 
       <div id="project-content" class="tab-pane hidden animate-in fade-in duration-300">
-        <div class="text-center py-20 text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
-          프로젝트 리뷰가 없습니다!
+        <div class="text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for card in project_cards %}
+              <div data-id="{{ card._id }}"
+               class="flex flex-col rounded-2xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400 hover:shadow-lg cursor-pointer overflow-hidden min-h-[320px]"> <div class="px-8 py-6 bg-gray-50/50">
+              <h3 class="text-2xl font-extrabold text-gray-900 line-clamp-1">{{ card.title }}</h3> </div>
+
+            <div class="border-t border-gray-100"></div>
+
+            <div class="p-8 flex-1">
+              <p class="text-gray-600 text-base line-clamp-4 leading-relaxed">{{ card.content }}</p> </div>
+          </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
@@ -99,6 +111,12 @@
       activeBtn.classList.replace("font-medium", "font-bold");
       activeBtn.querySelector(".indicator").classList.replace("bg-transparent", "bg-gray-900");
     }
+
+    // 게시글 작성 이벤트
+    postCard = document.getElementById('post-card')
+    postCard.addEventListener('click', function(){
+      location.href = '/upload';
+    });
 
     // 카드 클릭 이벤트 처리 (상세 페이지 이동 등)
     document.querySelectorAll('[data-id]').forEach(card => {

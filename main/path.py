@@ -46,9 +46,12 @@ def index():
         
         # 4. ObjectId 문자열 변환
         serialized_cards = serialize_id(cards_cursor)
+
+        # project_card 데이터 find 및 나열하기
+        project_cards = serialize_id(list(db.project_card.find()))
         
         # 5. 템플릿 렌더링
-        return render_template("index.html", cards=serialized_cards)
+        return render_template("index.html", cards=serialized_cards, project_cards = project_cards)
         
     except Exception as e:
         print(f"Error: {e}")
