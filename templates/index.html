@@ -8,40 +8,13 @@
   <title>정글위키</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="/static/jungle-nav.js"></script>
 </head>
 
 <body>
-  <!-- ===== 로그인 모달 ===== -->
-  <!-- JS에서 내부 교체 -->
-  <div id="modal-overlay"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div id="modal-card" class="relative w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl px-10 py-12">
-    </div>
-  </div>
 
+  <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
 
-  <nav class="flex justify-between p-6 bg-white shadow">
-    <div class="font-bold text-xl">정글 위키</div>
-    <div class="hidden lg:flex gap-x-8">
-      <!--알림-->
-      <a href="#" class="hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-        </svg>
-      </a>
-      <button id="token-test">토큰버튼</button>
-      <!--검색-->
-      <a href="#" class="hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-        </svg>
-      </a>
-      <!--로그인-->
-      <a onclick="openModal('login')" class="hover:text-blue-600">로그인</a>
-    </div>
-  </nav>
   <div class="w-full max-w-md mt-10 ml-10">
     <div class="flex gap-x-8 border-b border-gray-200" role="tablist">
       <button onclick="switchTab(event, 'theory-content')"
@@ -159,141 +132,7 @@
     </div>
   </div>
   <script>
-    const overlay = document.getElementById('modal-overlay');
-    const card = document.getElementById('modal-card');
-
-
-
-    // ── 공통 입력 필드(ID,비번,학생번호) / 버튼 클래스
-    const inputClass = `w-full border border-gray-200 rounded-lg px-4 py-3
-        text-sm text-gray-800 placeholder-gray-400 bg-gray-50
-        focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-800/10
-        transition-all duration-150`;
-
-    const btnClass = `w-full bg-gray-900 text-white font-medium text-sm tracking-wide
-        rounded-xl py-3.5 mb-4 hover:bg-gray-700 active:scale-[0.98]
-        transition-all duration-150 cursor-pointer`;
-    // 로그인 템플릿
-    function loginTemplate() {
-      return `
-          <button onclick="closeModal()" aria-label="닫기"
-                  class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
-                         rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100
-                         active:scale-90 transition-all duration-150">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <h2 class="text-center text-3xl font-bold tracking-[0.2em] uppercase mb-10 text-gray-900">LOGIN</h2>
-          <div class="flex flex-col gap-3 mb-5">
-            <input id="user-id" type="text"     placeholder="아이디"   class="${inputClass}" />
-            <input id="user-pw" type="password" placeholder="비밀번호" class="${inputClass}" />
-          </div>
-          <button onclick="handleLogin()" class="${btnClass}">정글위키 로그인</button>
-          <p onclick="openModal('signup')"
-             class="text-right text-xs text-gray-400 hover:text-gray-700 cursor-pointer transition-colors duration-150">
-            회원가입
-          </p>`;
-    }
-    // 회원가입 템플릿
-    function signupTemplate() {
-      return `
-          <button onclick="closeModal()" aria-label="닫기"
-                  class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
-                         rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100
-                         active:scale-90 transition-all duration-150">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <h2 class="text-center text-3xl font-bold tracking-[0.2em] uppercase mb-10 text-gray-900">SIGN UP</h2>
-          <div class="flex flex-col gap-3 mb-5">
-            <input id="su-id"      type="text"     placeholder="아이디"   class="${inputClass}" />
-            <input id="su-pw"      type="password" placeholder="비밀번호" class="${inputClass}" />
-            <input id="su-student" type="text"     placeholder="학생번호" class="${inputClass}" />
-          </div>
-          <button onclick="handleSignup()" class="${btnClass}">회원가입</button>
-          <p onclick="openModal('login')"
-             class="text-right text-xs text-gray-400 hover:text-gray-700 cursor-pointer transition-colors duration-150">
-            이미 계정이 있으신가요? 로그인
-          </p>`;
-    }
-
-    function openModal(type) {
-      // 모달 안을 해당 템플릿으로 교체
-      card.innerHTML = type === 'login' ? loginTemplate() : signupTemplate();
-
-      // 오버레이
-      overlay.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-
-    }
-
-    function closeModal() {
-      overlay.classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    // 로그인 처리 함수
-    async function handleLogin() {
-      const id = document.getElementById('user-id').value.trim();
-      const pw = document.getElementById('user-pw').value.trim();
-
-      if (id && pw) {
-        const response = await fetch("/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input_id: id, input_pwd: pw })
-        });
-
-        const jsonData = await response.json();
-        console.log(jsonData);
-
-        if (jsonData.result == "success") {
-          alert(`${id}님, 환영합니다! 로컬 보관쿠키: ${jsonData.msg}`);
-          
-          localStorage.setItem('access_token', jsonData.access_token);
-          closeModal();
-        }
-        else {
-          alert("로그인 실패" + response.status)
-        }
-      }
-    }
-
-    const tokenButton = document.getElementById('token-test');
-
-    tokenButton.addEventListener('click', async function (){
-      
-      const access_token = localStorage.getItem('access_token');
-
-      const response = await fetch("/auth/tokentest", {
-        method: "GET",
-        headers: { 
-          "Authorization": `Bearer ${access_token}`,
-          "Content-Type": "application/json" 
-        }
-      });
-
-      const jsonData = await response.json();
-      
-      console.log(jsonData);
-    });
-
-    // 회원가입 처리함수
-    function handleSignup() {
-      const id = document.getElementById('su-id').value.trim();
-      const pw = document.getElementById('su-pw').value.trim();
-      const student = document.getElementById('su-student').value.trim();
-      if (id && pw && student) { alert(`${id}님, 회원가입 완료!`); closeModal(); }
-      else { alert('모든 항목을 입력해주세요.'); }
-    }
-
-    // 배경 클릭 / ESC 닫기 
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-
+ 
     function switchTab(e, contentId) {
       document
         .querySelectorAll(".tab-pane")

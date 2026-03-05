@@ -16,6 +16,10 @@ def upload():
 def update():
     return render_template('update.html')
 
+@bp.route('/history')
+def history():
+    return render_template('history.html')
+
 @bp.route('/')
 def index():
     return render_template('index.html')
