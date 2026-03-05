@@ -80,4 +80,18 @@ def login():
 
     return response
 
+@bp.route("/auth/logout", methods=['DELETE'])
+@jwt_required(refresh=True)
+def logout():
+    response = make_response(jsonify({
+        'result': 'success',
+        'msg': '로그아웃 완료'
+    }), 200)
 
+    unset_jwt_cookies(response)
+    return response
+
+@bp.route("/user/me", methods=['GET'])
+@jwt_required()
+def login_check():
+    return jsonify({"logedin": True})
