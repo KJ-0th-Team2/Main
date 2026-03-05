@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from datetime import timedelta
 from db import db
 from main import common, account, path
 from flask_jwt_extended import *
@@ -8,6 +9,9 @@ app = Flask(__name__)
 
 app.config.update(
     DEBUG = True,
+    JWT_TOKEN_LOCATION = ['headers','cookies'],
+    JWT_COOKIE_CSRF_PROTECT = False,
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=5),
     JWT_SECRET_KEY = "123"
 )
 
@@ -33,7 +37,6 @@ if not user:
     print(data)
 else:
     print("이미 있음")
-
 
 if __name__ == '__main__':
     app.run(debug=True)
