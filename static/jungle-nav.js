@@ -14,6 +14,7 @@ class JungleNav extends HTMLElement {
     super();
     this._escBound = false;
     this._notifications = [];
+    this._isLoggedIn = !!localStorage.getItem('access_token');
   }
 
   connectedCallback() {
@@ -43,8 +44,7 @@ class JungleNav extends HTMLElement {
       <nav class="flex justify-between items-center p-6 bg-white shadow">
         <a href="${logoHref}" class="font-bold text-xl text-gray-900 no-underline">${logoText}</a>
         <div class="flex items-center gap-x-8">
-          <button id="token-test">토큰 테스트</button>
-          <button id="logout">로그아웃</button>
+
           <!-- 알림 -->
             <div class="relative" id="jn-noti-wrapper">
             <button id="jn-noti-btn"
@@ -90,18 +90,24 @@ class JungleNav extends HTMLElement {
                 class="hidden border border-gray-300 rounded px-2 py-1 ml-2"
                 placeholder="검색어를 입력하세요" />
           <!-- 로그인 -->
-          <button id="jn-login-trigger"
-            class="text-gray-500 hover:text-blue-600 bg-transparent border-none cursor-pointer text-base">
-            로그인
-          </button>
+          ${this._isLoggedIn
+            ? `<button id="logout"
+                 class="text-gray-500 hover:text-red-500 bg-transparent border-none cursor-pointer text-base">
+                 로그아웃
+               </button>`
+            : `<button id="jn-login-trigger"
+                 class="text-gray-500 hover:text-blue-600 bg-transparent border-none cursor-pointer text-base">
+                 로그인
+               </button>`
+          }
         </div>
       </nav>
     `;
 
     // 이벤트 바인딩
-    this.querySelector("#jn-login-trigger").addEventListener("click", () =>
-      this._openModal("login"),
-    );
+    this.querySelector("#jn-login-trigger") 
+      ?.addEventListener("click", () => this._openModal("login"));
+
     const searchTrigger = this.querySelector('#jn-search-trigger');
     const searchInput = this.querySelector('#jn-search-input');
     // 검색 input 토글
@@ -179,7 +185,7 @@ class JungleNav extends HTMLElement {
     }
 
     // 토큰 상태 테스트
-    this.querySelector('#token-test').addEventListener('click', async () => {
+    this.querySelector('#token-test')?.addEventListener('click', async () => {
       const access_token = localStorage.getItem('access_token')
 
       const response = await fetch('/api/auth/tokentest', {
@@ -188,7 +194,7 @@ class JungleNav extends HTMLElement {
           'Authorization': `Bearer ${access_token}`,
           'Content-Type': 'application/json'
         }
-      })
+      });
       console.log(response.status);
 
       const data = await response.json();
@@ -202,7 +208,7 @@ class JungleNav extends HTMLElement {
         const refresh = await fetch('/api/auth/refresh', {
           method: 'POST',
           credentials: 'include'
-        })
+        });
 
         const refreshData = await refresh.json();
         console.log("access token(방금 받았으니) 유무 확인");
@@ -221,7 +227,7 @@ class JungleNav extends HTMLElement {
     });
 
       // 로그아웃 버튼
-      this.querySelector('#logout').addEventListener('click', async () => {
+      this.querySelector('#logout')?.addEventListener('click', async () => {
           const request = await fetch('/api/auth/logout', {
             method: "DELETE"
           });
@@ -230,6 +236,10 @@ class JungleNav extends HTMLElement {
           localStorage.removeItem('access_token');
 
           alert(data.msg);
+
+          this._isLoggedIn = false;
+          this._render();
+          this.dispatchEvent(new CustomEvent("jungle-logout", { bubbles: true }));
       });
   }
 
@@ -327,6 +337,13 @@ class JungleNav extends HTMLElement {
       card
         .querySelector("#jn-switch-link")
         .addEventListener("click", () => this._openModal("signup"));
+
+      card.querySelector("#jn-user-id").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") card.querySelector("#jn-user-pw").focus();
+      });
+      card.querySelector("#jn-user-pw").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") this._handleLogin();
+      });
     } else {
       card
         .querySelector("#jn-submit-btn")
@@ -334,6 +351,15 @@ class JungleNav extends HTMLElement {
       card
         .querySelector("#jn-switch-link")
         .addEventListener("click", () => this._openModal("login"));
+      card.querySelector("#jn-su-id").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") card.querySelector("#jn-su-pw").focus();
+      });
+      card.querySelector("#jn-su-pw").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") card.querySelector("#jn-su-student").focus();
+      });
+      card.querySelector("#jn-su-student").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") this._handleSignup();
+      });
     }
   }
 
@@ -455,6 +481,8 @@ class JungleNav extends HTMLElement {
         alert(`${id}님, 환영합니다!`);
         localStorage.setItem("access_token", data.access_token);
         this._closeModal();
+        this._isLoggedIn = true;
+        this._render();
       } else {
         // 💡 alert 대신 화면에 빨간 메시지 출력
         errorEl.textContent = data.msg || "아이디 또는 비밀번호를 확인하세요.";
