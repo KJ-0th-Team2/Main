@@ -8,7 +8,7 @@ import bcrypt
 bp = Blueprint('account', __name__)
 
 # 회원가입
-@bp.route("/api/user/post", methods=['POST'])
+@bp.route("/api/users/post", methods=['POST'])
 def register():
     member_id = request.json['input_num']
     id_receive = request.json['input_id']
@@ -99,16 +99,21 @@ def login():
     # 입력받은 아이디가 실제로 존재하는 값인지 조회
     value = db.user.find_one({"username":f"{id_receive}"})
 
+    if id_receive is None or pw_receive is None:
+        return jsonify({
+            'result': 'fail',
+            'msg': '아이디 또는 비밀번호를 입력해주세요.'
+        }), 403
     if value is None:
         return jsonify({
             'result': 'fail',
-            'msg': 'ID가 없습니다'
+            'msg': '아이디 혹은 비밀번호를 잘못 입력했습니다.'
         }), 403
     
     if (pw_receive != value['password']):
         return jsonify ({
             'result': 'fail',
-            'msg': 'pw 불일치'
+            'msg': '아이디 혹은 비밀번호를 잘못 입력했습니다.'
         }), 403
     
     access_token = create_access_token(identity=id_receive)

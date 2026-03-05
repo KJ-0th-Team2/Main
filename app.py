@@ -3,6 +3,7 @@ from datetime import timedelta, datetime, timezone
 from db import db
 from main import common, account, path
 from flask_jwt_extended import *
+import bcrypt
 
 app = Flask(__name__)
 
@@ -21,14 +22,15 @@ app.register_blueprint(common.bp)
 app.register_blueprint(account.bp)
 app.register_blueprint(path.bp)
 
-user = list(db.user.find({}))
+user = db.user.find_one({'username':'test'})
 
 if not user:
     # 반환값 없으면 유저 하나 만들기
+    passwd = '123'
     user_data = {
         '_id' : 1,
         'username' : 'test',
-        'password' : '123'
+        'password' : bcrypt.hashpw(passwd.encode('UTF-8'), bcrypt.gensalt()).decode('utf-8')
     }
         
     db.user.insert_one(user_data)
@@ -36,7 +38,21 @@ if not user:
     data = db.user.find_one({})
     print(data)
 else:
-    print("이미 있음")
+    db.user.delete_one({'username':'test'})
+
+    passwd = '123'
+    user_data = {
+        '_id' : 1,
+        'username' : 'test',
+        'password' : bcrypt.hashpw(passwd.encode('UTF-8'), bcrypt.gensalt()).decode('utf-8')
+    }
+        
+    db.user.insert_one(user_data)
+
+    data = db.user.find_one({})
+    print(data)
+
+    print("기존계정 지우고 해시 passwd 포함한 계정 생성")
 
 post = list(db.post.find({}))
 
