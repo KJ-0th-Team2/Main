@@ -20,7 +20,6 @@ def loginpage():
 #     return
 
 
-
 @bp.route("/auth/tokentest", methods=['GET'])
 # 밑에 jwt_required로 토큰 검사
 @jwt_required()
