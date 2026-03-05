@@ -44,6 +44,7 @@ class JungleNav extends HTMLElement {
                 d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
             </svg>
           </a>
+          <button id="token-test">토큰 검사</button>
           <!-- 검색 -->
           <a href="#" class="text-gray-500 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -63,6 +64,44 @@ class JungleNav extends HTMLElement {
 
     // 이벤트 바인딩
     this.querySelector('#jn-login-trigger').addEventListener('click', () => this._openModal('login'));
+
+    // 쿼리셀렉터로 토큰 테스트
+    this.querySelector('#token-test').addEventListener('click', async () => {
+        const access_token = localStorage.getItem('access_token');
+        const response = await fetch("/auth/tokentest", {
+            method: "GET",
+            headers: { 
+                "Authorization": `Bearer ${access_token}`,
+                "Content-Type": "application/json" 
+            }
+        });
+        const jsonData = await response.json();
+        console.log(jsonData);
+
+        // 401 반환시 점검
+        if(response.status == 401 | response.status == 422) {
+          const refresh = await fetch('/auth/refresh', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          });
+
+          const refreshResponse = await refresh.json();
+          console.log(refresh.status);
+          console.log(refreshResponse.msg);
+
+          // 리프레시 요청 후 데이터 받을 경우,
+          if (refresh.status == 200) {
+            console.log(refreshResponse.access_token);
+            
+            // localStorage.setItem('access_token', refresh.access_token);
+          } else {// 만료된 경우 (리프레시 갈겨도 401일 때) 
+            console.log("로그인을 해주세요");
+          }
+        }
+    });
 
     const overlay = this.querySelector('#jn-modal-overlay');
     overlay.addEventListener('click', (e) => {
@@ -189,7 +228,9 @@ class JungleNav extends HTMLElement {
     try {
       const res  = await fetch('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ input_id: id, input_pwd: pw }),
       });
       const data = await res.json();
@@ -200,6 +241,8 @@ class JungleNav extends HTMLElement {
           bubbles: true,
         }));
         alert(`${id}님, 환영합니다!`);
+        localStorage.setItem('access_token', data.access_token);
+
         this._closeModal();
       } else {
         alert('로그인 실패: ' + (data.msg || '아이디 또는 비밀번호를 확인하세요.'));

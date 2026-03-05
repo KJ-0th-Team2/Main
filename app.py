@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 app.config.update(
     DEBUG = True,
+    JWT_TOKEN_LOCATION = ['headers', 'cookies'],
     JWT_SECRET_KEY = "123"
 )
 

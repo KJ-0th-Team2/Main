@@ -20,9 +20,16 @@ def loginpage():
 #     return
 
 @bp.route("/auth/refresh", methods=['POST'])
+@jwt_required(refresh=True)
 def refresh_token():
+    identity_value = get_jwt_identity()
+    new_access_token = create_access_token(identity = identity_value)
 
-    return
+    return jsonify({ 
+        'result': 'success',
+        'msg':'access_token 재발급',
+        'access_token': new_access_token
+    }), 200
 
 @bp.route("/auth/tokentest", methods=['GET'])
 @jwt_required()
@@ -34,7 +41,7 @@ def token_test():
     }), 200
 
 # @jwt_required는 헤더로 수신한 Access 토큰의 유효성을 검증하는 데코레이터
-# 즉 프론트엔드에서 Access_tokken값을 헤더로 보내야 함. Authorization
+# 즉 프론트엔드에서 Access_token값을 헤더로 보내야 함. Authorization
 @bp.route("/auth/login", methods=['POST'])
 def login():
     # TODO JWT 인증키는 app.py에서 정의
@@ -58,13 +65,13 @@ def login():
         }), 403
     
     access_token = create_access_token(identity=id_receive, expires_delta=timedelta(seconds=10))
-    refresh_token = create_refresh_token(identity=id_receive, expires_delta=None)
+    refresh_token_cookie = create_refresh_token(identity=id_receive, expires_delta=None)
 
     response = make_response(jsonify({
         'result': 'success',
         'msg': f'정상 작동',
         'access_token': access_token
     }), 200)
-    response.set_cookie("refresh_token", refresh_token, httponly=True)
+    response.set_cookie("refresh_token_cookie", refresh_token_cookie, httponly=True)
 
     return response
