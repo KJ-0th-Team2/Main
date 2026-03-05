@@ -173,8 +173,8 @@
           </button>
           <h2 class="text-center text-3xl font-bold tracking-[0.2em] uppercase mb-10 text-gray-900">LOGIN</h2>
           <div class="flex flex-col gap-3 mb-5">
-            <input id="lm-id" type="text"     placeholder="아이디"   class="${inputClass}" />
-            <input id="lm-pw" type="password" placeholder="비밀번호" class="${inputClass}" />
+            <input id="user-id" type="text"     placeholder="아이디"   class="${inputClass}" />
+            <input id="user-pw" type="password" placeholder="비밀번호" class="${inputClass}" />
           </div>
           <button onclick="handleLogin()" class="${btnClass}">정글위키 로그인</button>
           <p onclick="openModal('signup')"
@@ -221,24 +221,40 @@
         document.body.style.overflow = '';
       }
 
-      // 로그인, 회원가입 처리 함수 추후 구현
-      // function handleLogin() {
-      //   const id = document.getElementById('lm-id').value.trim();
-      //   const pw = document.getElementById('lm-pw').value.trim();
-      //   if (id && pw) {
-      //     alert(`${id}님, 환영합니다!`);
-      //     closeLoginModal();
-      //   } else {
-      //     alert('아이디와 비밀번호를 입력해주세요.');
-      //   }
-      // }
-      //       function handleSignup() {
-      //   const id      = document.getElementById('su-id').value.trim();
-      //   const pw      = document.getElementById('su-pw').value.trim();
-      //   const student = document.getElementById('su-student').value.trim();
-      //   if (id && pw && student) { alert(`${id}님, 회원가입 완료!`); closeModal(); }
-      //   else                     { alert('모든 항목을 입력해주세요.'); }
-      // }
+      // 로그인 처리 함수
+      async function handleLogin() {
+        const id = document.getElementById('user-id').value.trim();
+        const pw = document.getElementById('user-pw').value.trim();
+
+        if (id && pw) {
+          const response = await fetch("/auth/login", {
+            method: "POST",
+            headers : { "Content-Type": "appllication/json"},
+            body: JSON.stringify({input_id: id, input_pwd: pw})
+          });
+
+          const jsonData = await response.json();
+          console.log(jsonData);
+
+          if(jsonData.result==="success"){
+            alert(`${id}님, 환영합니다! 로컬보관쿠키: ${jsonData.msg}`);
+            closeModal();
+          }
+          else{
+            alert("로그인 실패")
+          }
+
+        } 
+      }
+
+      // 회원가입 처리함수
+      function handleSignup() {
+        const id      = document.getElementById('su-id').value.trim();
+        const pw      = document.getElementById('su-pw').value.trim();
+        const student = document.getElementById('su-student').value.trim();
+        if (id && pw && student) { alert(`${id}님, 회원가입 완료!`); closeModal(); }
+        else                     { alert('모든 항목을 입력해주세요.'); }
+      }
 
       // 배경 클릭 / ESC 닫기 
       overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
