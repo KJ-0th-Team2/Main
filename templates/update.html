@@ -7,13 +7,17 @@
   <title>정글위키</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
   <script src="/static/jungle-nav.js"></script>
 </head>
 
 <body>
   <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
 
-  <div class="max-w-4xl mx-auto p-10 font-sans text-gray-900">
+  <div class="max-w-5xl mx-auto p-10 font-sans text-gray-900">
+
     <div class="flex justify-between items-baseline mb-8">
       <h1 class="text-5xl font-extrabold tracking-tight">JWT</h1>
       <div class="text-gray-400 text-sm">
@@ -22,34 +26,48 @@
       </div>
     </div>
 
-    <div class="flex flex-col md:flex-row gap-8 mb-4">
-      <div class="flex-1 flex flex-col justify-between min-h-[250px]">
-        <textarea placeholder="이론입니다. 어쩌구 저쩌구 이론입니다. 어쩌구 저쩌구"
-          class="w-full min-h-[350px] bg-gray-100 outline-none p-10 text-gray-800 placeholder-gray-500 resize-y leading-relaxed"></textarea>
+    <div class="flex flex-col md:flex-row gap-10">
 
-        <div class="flex justify-between items-center mt-4">
-          <button
-            class="rounded border border-gray-300 px-4 py-1.5 text-sm font-medium hover:bg-gray-200 transition-colors cursor-pointer">
+      <div class="flex-1 flex flex-col">
+        <div id="editor" class="bg-white rounded-md overflow-hidden"></div>
+
+        <div class="flex justify-center mt-10">
+          <button type="button" id="submit-btn"
+            class="border border-gray-400 bg-white px-16 py-2.5 text-gray-800 hover:bg-gray-50 font-medium transition-colors cursor-pointer rounded-md">
             수정 확인
           </button>
-
-
         </div>
       </div>
 
-      <div class="w-full md:w-52 border border-dashed border-gray-400 rounded-md p-5 h-max">
-        <h3 class="text-sm font-bold mb-3 text-gray-800">같이 본 키워드</h3>
-        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+      <div class="w-full md:w-48 border border-dashed border-gray-300 rounded-md p-5 h-max bg-white">
+        <h3 class="text-xs font-bold mb-3 text-gray-800">같이 본 키워드</h3>
+        <ul class="list-disc list-inside text-xs text-gray-800 space-y-1.5 pl-1">
           <li>session</li>
           <li>cookie</li>
         </ul>
       </div>
+
     </div>
 
-    <hr class="border-gray-400 my-4" />
 
 
   </div>
+
+  <script>
+    const editor = new toastui.Editor({
+      el: document.querySelector('#editor'),
+      height: '500px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      placeholder: '본문 내용을 작성해 주세요...',
+    });
+
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+  
+      const content = editor.getMarkdown();
+      console.log('수정 내용:', content);
+    });
+  </script>
 </body>
 
 </html>
