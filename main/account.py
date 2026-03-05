@@ -19,7 +19,21 @@ def loginpage():
 
 #     return
 
+
+
+@bp.route("/auth/tokentest", methods=['GET'])
+# 밑에 jwt_required로 토큰 검사
+@jwt_required()
+def token_test():
+
+    return jsonify({
+        'success': 'success',
+        'msg': 'jwt_required()로 검증. 현재 access_token 토큰 존재'
+    }), 200
+
+
 @bp.route("/auth/refresh", methods=['POST'])
+# jwt_required로 refresh 토큰 검사
 @jwt_required(refresh=True)
 def refresh_token():
     identity_value = get_jwt_identity()
@@ -27,17 +41,8 @@ def refresh_token():
 
     return jsonify({ 
         'result': 'success',
-        'msg':'access_token 재발급',
+        'userinfo': identity_value,
         'access_token': new_access_token
-    }), 200
-
-@bp.route("/auth/tokentest", methods=['GET'])
-@jwt_required()
-def token_test():
-
-    return jsonify({
-        'success': 'success',
-        'msg':'토큰 반환'
     }), 200
 
 # @jwt_required는 헤더로 수신한 Access 토큰의 유효성을 검증하는 데코레이터
@@ -64,14 +69,14 @@ def login():
             'msg': 'pw 불일치'
         }), 403
     
-    access_token = create_access_token(identity=id_receive, expires_delta=timedelta(seconds=10))
-    refresh_token_cookie = create_refresh_token(identity=id_receive, expires_delta=None)
+    access_token = create_access_token(identity=id_receive)
+    refresh_token = create_refresh_token(identity=id_receive, expires_delta=timedelta(minutes=10))
 
     response = make_response(jsonify({
         'result': 'success',
         'msg': f'정상 작동',
         'access_token': access_token
     }), 200)
-    response.set_cookie("refresh_token_cookie", refresh_token_cookie, httponly=True)
+    response.set_cookie("refresh_token_cookie", refresh_token, httponly=True)
 
     return response

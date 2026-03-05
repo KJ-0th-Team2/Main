@@ -67,40 +67,41 @@ class JungleNav extends HTMLElement {
 
     // 쿼리셀렉터로 토큰 테스트
     this.querySelector('#token-test').addEventListener('click', async () => {
-        const access_token = localStorage.getItem('access_token');
-        const response = await fetch("/auth/tokentest", {
-            method: "GET",
-            headers: { 
-                "Authorization": `Bearer ${access_token}`,
-                "Content-Type": "application/json" 
-            }
-        });
-        const jsonData = await response.json();
-        console.log(jsonData);
+      const access_token = localStorage.getItem('access_token')
 
-        // 401 반환시 점검
-        if(response.status == 401 | response.status == 422) {
-          const refresh = await fetch('/auth/refresh', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-          });
-
-          const refreshResponse = await refresh.json();
-          console.log(refresh.status);
-          console.log(refreshResponse.msg);
-
-          // 리프레시 요청 후 데이터 받을 경우,
-          if (refresh.status == 200) {
-            console.log(refreshResponse.access_token);
-            
-            // localStorage.setItem('access_token', refresh.access_token);
-          } else {// 만료된 경우 (리프레시 갈겨도 401일 때) 
-            console.log("로그인을 해주세요");
-          }
+      const response = await fetch ('/auth/tokentest', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/json'
         }
+      })
+      console.log(response.status);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('토큰 유효', data);
+      } else {
+        console.log('뭔가 문제 있음');
+        console.log('재발급 요청 시작');
+
+        const refresh = await fetch ('/auth/refresh', {
+          method: 'POST',
+          credentials: 'include'
+        })
+
+        console.log("1차 검증");
+
+        const refreshData = await refresh.json();
+
+        if (refresh.status == 401) {
+          alert('로그인을 해주세요.');
+        } else if (refresh.status == 200) {
+          alert('토큰 재발급 성공', refreshData.access_token);
+          localStorage.setItem('access_token', refreshData.access_token);
+        }
+      }
     });
 
     const overlay = this.querySelector('#jn-modal-overlay');
@@ -236,13 +237,14 @@ class JungleNav extends HTMLElement {
       const data = await res.json();
 
       if (data.result === 'success') {
+        localStorage.setItem('access_token', data.access_token);
+
         this.dispatchEvent(new CustomEvent('jungle-login', {
           detail: { userId: id, msg: data.msg },
           bubbles: true,
         }));
+        
         alert(`${id}님, 환영합니다!`);
-        localStorage.setItem('access_token', data.access_token);
-
         this._closeModal();
       } else {
         alert('로그인 실패: ' + (data.msg || '아이디 또는 비밀번호를 확인하세요.'));
