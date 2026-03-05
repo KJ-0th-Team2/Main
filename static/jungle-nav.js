@@ -176,7 +176,8 @@ class JungleNav extends HTMLElement {
       document.addEventListener("keydown", this._escHandler);
       this._escBound = true;
     }
-        // 쿼리셀렉터로 토큰 테스트
+    
+    // 쿼리셀렉터로 토큰 테스트
     this.querySelector('#token-test').addEventListener('click', async () => {
       const access_token = localStorage.getItem('access_token')
 

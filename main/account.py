@@ -3,12 +3,9 @@ from datetime import timedelta # refresh 토큰 시간제한
 from flask import render_template, Blueprint, request, jsonify, make_response
 from db import db # 순환 호출 에러 해결용
 import re # 정규 표현식 용도
+import bcrypt
 
 bp = Blueprint('account', __name__)
-
-@bp.route('/login')
-def loginpage():
-    return render_template('loginpage.html')
 
 # 회원가입
 @bp.route("/user/post", methods=['POST'])
@@ -17,23 +14,55 @@ def register():
     id_receive = request.json['input_id']
     pw_receive = request.json['input_pwd']
 
-    if not re.match(r'[a-z0-9]+$', id_receive):
-        return jsonify({
-            'result': 'fail',
-            'msg': '아이디는 소문자와 숫자만 가능합니다.'
-        }), 403
-    if member_id is None or pw_receive is None:
+    if member_id is None or id_receive is None or pw_receive is None:
         return jsonify({
             'result': 'fail',
             'msg': '모든 칸을 입력해주세요.'
-        }), 403
+        }), 400
     
+    if not re.match(r'^[a-z0-9]+$', id_receive):
+        return jsonify({
+            'result': 'fail',
+            'msg': '아이디는 소문자와 숫자만 가능합니다.'
+        }), 400
+    
+    if (db.user.find_one({'username':id_receive})):
+        return jsonify({
+            'result': 'fail',
+            'msg': '중복된 아이디입니다.'
+        }), 409
+    
+    hashed_password = bcrypt.hashpw(pw_receive.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
+    user_data = {
+        '_id': member_id,
+        'username': id_receive,
+        'password': hashed_password
+    }
 
-    return
+    db.user.insert_one(user_data)
+
+    return jsonify({
+        'result': 'success',
+        'msg': '회원가입 완료',
+    }), 200
+
+@bp.route("/auth/check_id", methods=['GET'])
+def check_id():
+    id_receive = request.args.get('query')
+
+    if (db.user.find_one({'username':id_receive})):
+        return jsonify({
+            'result': 'fail',
+            'msg': '중복된 아이디입니다.'
+        }), 409
+
+    return jsonify({
+        'result': 'success',
+        'msg': '사용 가능한 아이디입니다.'
+    }), 200
 
 # 아이디 중복확인
-
 @bp.route("/auth/tokentest", methods=['GET'])
 # 밑에 jwt_required로 토큰 검사
 @jwt_required()
@@ -102,7 +131,7 @@ def logout():
         'msg': '로그아웃 완료'
     }), 200)
 
-    unset_jwt_cookies(response)
+    unset_refresh_cookies(response)
     return response
 
 @bp.route("/user/me", methods=['GET'])
