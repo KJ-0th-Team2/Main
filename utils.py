@@ -1,11 +1,21 @@
-# from utils import serialize_id 
-# serialize_id(직렬화할 값)
+from bson import ObjectId
 
 # ObjdectId 직렬화 
 def serialize_id(data):
+    if not data:
+        return data
+    
     if isinstance(data,list):
         for item in data:
-            item["_id"] = str(item["_id"])
+            if "_id" in item:
+                item["_id"] = str(item["_id"])
     else:
-        data["_id"] = str(data["_id"])
+        if "_id" in data:
+            data["_id"] = str(data["_id"])
     return data
+
+# ObjectId로 변환
+def to_object_id(id):
+    try:
+        return ObjectId(id)
+    except: return None
