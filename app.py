@@ -67,11 +67,11 @@ if not post:
 
     db.card.insert_one(post_data)
 
-    data = db.post.find_one({})
+    data = db.card.find_one({})
 
     print(data)
 else:
-    print("랜덤한 포스트 이미 있음")
+    print("카드 이미 있음")
 
 
 if __name__ == '__main__':
