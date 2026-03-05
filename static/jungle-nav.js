@@ -45,7 +45,7 @@ class JungleNav extends HTMLElement {
         <div class="flex items-center gap-x-8">
           <button id="token-test">토큰 테스트</button>
           <!-- 알림 -->
-                      <div class="relative" id="jn-noti-wrapper">
+            <div class="relative" id="jn-noti-wrapper">
             <button id="jn-noti-btn"
               class="relative text-gray-500 hover:text-blue-600 bg-transparent border-none cursor-pointer flex items-center"
               aria-label="알림">
