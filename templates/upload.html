@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <body>
+    <style>
+      .grid > div {
+        background-color: blue;
+      }
+    </style>
+    <nav class="flex justify-between p-6 bg-white shadow">
+      <div class="font-bold text-xl">정글 위키</div>
+      <div class="hidden lg:flex gap-x-8">
+        <!--알림-->
+        <a href="#" class="hover:text-blue-600"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+            />
+          </svg>
+        </a>
+        <!--검색-->
+        <a href="#" class="hover:text-blue-600"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+        </a>
+        <!--로그인-->
+        <a href="#" class="hover:text-blue-600">로그인</a>
+      </div>
+    </nav>
+    
+
+
+    </div>
+    <div class="max-w-5xl mx-auto p-10 font-sans text-gray-900">
+      <div class="flex justify-end text-gray-300 text-sm mb-4 font-medium">
+        <span>수정일 26.03.04</span>
+        <span class="ml-3">v1</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-10">
+        <div class="flex-1 flex flex-col">
+          <form class="border border-gray-400 bg-[#e6e6e6] flex flex-col">
+            <input
+              type="text"
+              placeholder="제목을 입력하세요"
+              class="h-14 px-10 text-gray-800 font-bold bg-transparent outline-none border-b border-gray-400 placeholder-gray-500 w-full"
+            />
+
+            <textarea
+              placeholder="본문 내용을 작성해 주세요..."
+              class="w-full min-h-[350px] bg-gray outline-none p-10 text-gray-800 placeholder-gray-500 resize-y leading-relaxed"
+            ></textarea>
+          </form>
+
+          <div class="flex justify-center mt-10">
+            <button
+              type="button"
+              class="border border-gray-400 bg-white px-16 py-2.5 text-gray-800 hover:bg-gray-50 font-medium transition-colors cursor-pointer"
+            >
+              업로드
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="w-full md:w-48 border border-dashed border-gray-300 rounded-sm p-5 h-max"
+        >
+          <h3 class="text-xs font-bold mb-3 text-gray-800">같이 본 키워드</h3>
+          <ul
+            class="list-disc list-inside text-xs text-gray-800 space-y-1.5 pl-1"
+          >
+            <li>session</li>
+            <li>cookie</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

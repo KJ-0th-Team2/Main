@@ -33,6 +33,14 @@ if not user:
 else:
     print("이미 있음")
 
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+
+@app.route('/update')
+def update():
+    return render_template('update.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
