@@ -13,7 +13,7 @@ def project_list():
     # url에서 쿼리 스트링을 찾아야 함.
     # page라는 단어 추출
     # page 뒤에 있는 값을 기본값 1로 시작해서 추적
-    page = int(request.args.get('page'), 1)
+    page = int(request.args.get('page', 1))
     # 한 페이지에 보이게 할 갯수
     limit = 4
     # 현재 페이지에서 보여줘야 할 데이터.
@@ -23,12 +23,13 @@ def project_list():
     cards = list(db.project_card.find().skip(skip).limit(limit))
     total = db.project_card.count_documents({})
 
-    return jsonify({
-        'result': 'success',
-        'data': cards,
-        'total': total,
-        'page': page
-    })
+    return render_template(
+        'index.html',
+        project_cards=serialize_id(cards),
+        total = total,
+        page = page,
+        limit = limit
+    )
 
 @bp.route('/api/projects/cards', methods=['POST'])
 def project_post():
