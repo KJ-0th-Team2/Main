@@ -36,6 +36,7 @@ class JungleNav extends HTMLElement {
       <nav class="flex justify-between items-center p-6 bg-white shadow">
         <a href="${logoHref}" class="font-bold text-xl text-gray-900 no-underline">${logoText}</a>
         <div class="flex items-center gap-x-8">
+          <button id="token-test">토큰 테스트</button>
           <!-- 알림 -->
           <a href="#" class="text-gray-500 hover:text-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -52,7 +53,7 @@ class JungleNav extends HTMLElement {
                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
           </a>
-                    <input type="text" id="jn-search-input"
+              <input type="text" id="jn-search-input"
                 class="hidden border border-gray-300 rounded px-2 py-1 ml-2"
                 placeholder="검색어를 입력하세요" />
           <!-- 로그인 -->
