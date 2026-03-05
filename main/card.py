@@ -28,6 +28,9 @@ def card_post():
     title = input_data.get("title")
     content = input_data.get("content")
 
+    if not title or not content:
+        return jsonify({"result":"fail", "msg":"제목과 내용은 필수 항목입니다."}), 400
+    
     card={
         "title":title,
         "content":content,
