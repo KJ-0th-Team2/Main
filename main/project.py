@@ -7,7 +7,6 @@ from bson import ObjectId
 bp = Blueprint('project', __name__)
 
 
-
 @bp.route('/api/projects/cards', methods=['GET'])
 def project_list():
     # url에서 쿼리 스트링을 찾아야 함.
@@ -25,7 +24,7 @@ def project_list():
 
     return render_template(
         'index.html',
-        project_card="프로젝트 카드"
+        project_card="테스트"
     )
 
 @bp.route('/api/projects/cards', methods=['POST'])

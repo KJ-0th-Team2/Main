@@ -75,5 +75,10 @@ else:
     print("카드 이미 있음")
 
 
+# 서버용 코드
+
+# if __name__ == '__main__':
+#     app.run('0.0.0.0', port=5000, debug=False)
+
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=False)
+    app.run(debug=True)
