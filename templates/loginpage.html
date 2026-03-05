@@ -36,14 +36,16 @@
             input_pwd:userpass
           })
         })
+        
         const jsonData = await response.json();
           console.log(jsonData);
           
           // 응답 처리
           if (jsonData.result === "success") {
-              alert("로컬 보관 쿠키 " + jsonData.msg);
+            console.log('진입 테스트');
+            console.log(jsonData.access_token);
           } else {
-              alert("로그인 실패");
+            alert("로그인 실패");
           }
       });
     </script>

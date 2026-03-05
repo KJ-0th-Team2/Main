@@ -1,4 +1,5 @@
 from flask_jwt_extended import *
+from datetime import timedelta
 from flask import render_template, Blueprint, request, jsonify, make_response
 from db import db
 
@@ -45,20 +46,14 @@ def login():
             'msg': 'pw 불일치'
         })
     
-    access_token = create_access_token(identity=id_receive, expires_delta=None)
+    access_token = create_access_token(identity=id_receive, expires_delta=timedelta(seconds=5))
     refresh_token = create_refresh_token(identity=id_receive, expires_delta=None)
 
     response = make_response(jsonify({
         'result': 'success',
         'msg': f'정상 작동',
+        'access_token': access_token
     }))
+    response.set_cookie("refresh_token", refresh_token, httponly=True)
 
-    response.set_cookie
-
-
-    return jsonify({
-        'result': 'success',
-        'msg': f'정상 전달 {value}',
-        'access_token': access_token,
-        'refresh_token': refresh_token
-    })
+    return response
