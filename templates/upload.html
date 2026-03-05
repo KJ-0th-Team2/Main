@@ -1,65 +1,110 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>새 글 작성 - 정글 위키</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
   <script src="/static/jungle-nav.js"></script>
-  <body>
-    <style>
-      .grid > div {
-        background-color: blue;
+
+</head>
+
+<body>
+  <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
+
+  <div class="max-w-5xl mx-auto p-10 font-sans text-gray-900">
+    <div class="flex flex-col md:flex-row gap-10">
+
+      <div class="flex-1 flex flex-col">
+        <form class="flex flex-col gap-4">
+          <input type="text" id="title-input" placeholder="제목을 입력하세요"
+            class="h-14 px-4 text-gray-800 font-bold bg-white outline-none border border-gray-300 placeholder-gray-500 w-full rounded-md focus:border-gray-800 transition-colors" />
+
+          <div id="editor" class="bg-white rounded-md overflow-hidden"></div>
+        </form>
+
+        <div class="flex justify-center mt-10">
+          <button type="button" id="submit-btn"
+            class="border border-gray-400 bg-white px-16 py-2.5 text-gray-800 hover:bg-gray-50 font-medium transition-colors cursor-pointer rounded-md">
+            업로드
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full md:w-48 border border-dashed border-gray-300 rounded-md p-5 h-max bg-white">
+        <h3 class="text-xs font-bold mb-3 text-gray-800">같이 본 키워드</h3>
+        <ul class="list-disc list-inside text-xs text-gray-800 space-y-1.5 pl-1">
+          <li>session</li>
+          <li>cookie</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 1. 에디터 초기화
+    const editor = new toastui.Editor({
+      el: document.querySelector('#editor'),
+      height: '500px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      placeholder: '본문 내용을 작성해 주세요...',
+    });
+
+    // 2. 업로드 버튼 이벤트 (서버로 데이터 전송)
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const title = document.getElementById('title-input').value;
+      const content = editor.getMarkdown(); // 마크다운 텍스트 추출
+
+      // 유효성 검사 (빈칸 방지)
+      if (!title) {
+        alert("제목을 입력해 주세요.");
+        return;
       }
-    </style>
-    <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
+      if (!content) {
+        alert("본문 내용을 입력해 주세요.");
+        return;
+      }
+
+      // 서버로 보낼 데이터 묶기
+      const postData = {
+        title: title,
+        content: content
+      };
+
+      try {
+        // 백엔드 API 주소로 POST 요청 보내기 (예시 경로: /api/posts)
+        const response = await fetch('/cards', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // 로그인이 필요하다면 아래처럼 토큰을 함께 보냅니다.
+            // 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }, body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+          alert('성공적으로 업로드 되었습니다!');
+          console.log(response);
 
 
-    </div>
-    <div class="max-w-5xl mx-auto p-10 font-sans text-gray-900">
-      <div class="flex justify-end text-gray-300 text-sm mb-4 font-medium">
-        <span>수정일 26.03.04</span>
-        <span class="ml-3">v1</span>
-      </div>
+          window.location.href = '/'; // 업로드 성공 시 메인 화면으로 이동
+        } else {
+          alert('업로드에 실패했습니다. 서버를 확인해 주세요.');
+        }
+      } catch (error) {
+        console.error("업로드 에러:", error);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+      }
+    });
+  </script>
+</body>
 
-      <div class="flex flex-col md:flex-row gap-10">
-        <div class="flex-1 flex flex-col">
-          <form class="border border-gray-400 bg-[#e6e6e6] flex flex-col">
-            <input
-              type="text"
-              placeholder="제목을 입력하세요"
-              class="h-14 px-10 text-gray-800 font-bold bg-transparent outline-none border-b border-gray-400 placeholder-gray-500 w-full"
-            />
-
-            <textarea
-              placeholder="본문 내용을 작성해 주세요..."
-              class="w-full min-h-[350px] bg-gray outline-none p-10 text-gray-800 placeholder-gray-500 resize-y leading-relaxed"
-            ></textarea>
-          </form>
-
-          <div class="flex justify-center mt-10">
-            <button
-              type="button"
-              class="border border-gray-400 bg-white px-16 py-2.5 text-gray-800 hover:bg-gray-50 font-medium transition-colors cursor-pointer"
-            >
-              업로드
-            </button>
-          </div>
-        </div>
-
-        <div
-          class="w-full md:w-48 border border-dashed border-gray-300 rounded-sm p-5 h-max"
-        >
-          <h3 class="text-xs font-bold mb-3 text-gray-800">같이 본 키워드</h3>
-          <ul
-            class="list-disc list-inside text-xs text-gray-800 space-y-1.5 pl-1"
-          >
-            <li>session</li>
-            <li>cookie</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </body>
 </html>
