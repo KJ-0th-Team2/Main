@@ -109,6 +109,46 @@ class JungleNav extends HTMLElement {
       document.addEventListener("keydown", this._escHandler);
       this._escBound = true;
     }
+
+    // 쿼리셀렉터로 토큰 테스트
+    this.querySelector('#token-test').addEventListener('click', async () => {
+      const access_token = localStorage.getItem('access_token')
+
+      const response = await fetch ('/auth/tokentest', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log(response.status);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('토큰 유효', data);
+      } else {
+        console.log('뭔가 문제 있음');
+        console.log('재발급 요청 시작');
+
+        const refresh = await fetch ('/auth/refresh', {
+          method: 'POST',
+          credentials: 'include'
+        })
+
+        console.log("1차 검증");
+
+        const refreshData = await refresh.json();
+
+        if (refresh.status == 401) {
+          alert('로그인을 해주세요.');
+        } else if (refresh.status == 200) {
+          alert('토큰 재발급 성공', refreshData.access_token);
+          localStorage.setItem('access_token', refreshData.access_token);
+        }
+      }
+    });
+
   }
 
   disconnectedCallback() {
@@ -263,7 +303,9 @@ class JungleNav extends HTMLElement {
           }),
         );
         alert(`${id}님, 환영합니다!`);
+
         localStorage.setItem("access_token", data.access_token);
+        
         this._closeModal();
       } else {
         // 💡 alert 대신 화면에 빨간 메시지 출력
