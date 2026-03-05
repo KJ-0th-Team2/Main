@@ -110,7 +110,13 @@ def login():
             'msg': '아이디 혹은 비밀번호를 잘못 입력했습니다.'
         }), 403
     
-    if (pw_receive != value['password']):
+    # hashed = bcrypt.hashpw(pw_receive.encode('UTF-8'), bcrypt.gensalt()).decode('utf-8')
+    user_data = db.user.find_one({'username':id_receive})
+
+    db_pass = user_data['password']
+
+    # 비밀번호 인증
+    if not bcrypt.checkpw(pw_receive.encode('UTF-8'), db_pass.encode('UTF-8')):
         return jsonify ({
             'result': 'fail',
             'msg': '아이디 혹은 비밀번호를 잘못 입력했습니다.'
