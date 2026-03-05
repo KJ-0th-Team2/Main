@@ -73,7 +73,7 @@ def search_card():
         return jsonify({"result":"fail", "msg":"서버오류"}),500
         
 
-@bp.route("/api/cards/<cardId>", methoeds=["PATCH"])
+@bp.route("/api/cards/<cardId>", methods=["PATCH"])
 def card_edit(cardId):
 
     input_data = request.get_json()
