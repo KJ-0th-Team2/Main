@@ -75,6 +75,21 @@ else:
     print("카드 이미 있음")
 
 
+prcard = list(db.project_card.find({}))
+
+if prcard is None:
+    card_data = {
+        'title' : '정글 위키와 함께하는 3박 4일간의 여정',
+        'content' : 'Jinja와 같은 새로운 기능, JWT를 이용한 보안 등, 다양한 도전을 시도해본 프로젝트',
+        'team' : 2,
+        'member' : ['이우진', '임재환', '임가인', '이창원']
+    }
+    db.project_card.insert_one(card_data)
+else:
+    print("있으면 스킵")
+    
+
+
 # 서버용 코드
 
 # if __name__ == '__main__':
