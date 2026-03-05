@@ -6,13 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>정글위키</title>
-  <style>
-    .recent {
-      position: absolute;
-      right: 50px;
-      top: 120px;
-    }
-  </style>
+
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
@@ -74,22 +68,20 @@
     </div>
 
     <div class="mt-6">
-      <div id="" class="tab-pane block animate-in fade-in duration-300">
-
-      </div>
-      <div id="" class="tab-pane hidden animate-in fade-in duration-300">
-        <p class="text-gray-600">
-          진행 중인 프로젝트 정보를 여기에 작성하세요.
-        </p>
-      </div>
+      <div id="theory-content" class="tab-pane block animate-in fade-in duration-300"></div>
+      <div id="project-content" class="tab-pane hidden animate-in fade-in duration-300"></div>
     </div>
   </div>
 
-  <form class="recent">
-    <select id="" required>
-      <option value="" disabled selected>최신순</option>
-    </select>
-  </form>
+  <div class="flex justify-end px-6 mt-4 md:mt-0">
+    <form class="recent">
+      <select required
+        class="border border-gray-300 rounded-md py-1.5 px-3 text-sm text-gray-700 outline-none cursor-pointer hover:border-gray-400 transition-colors">
+        <option value="" disabled selected>최신순</option>
+        <option value="old">오래된순</option>
+      </select>
+    </form>
+  </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
 
@@ -147,22 +139,40 @@
     </div>
 
 
-    <script>
-      const overlay = document.getElementById('modal-overlay');
-      const card = document.getElementById('modal-card');
+    <div
+      class="flex flex-col rounded-xl border border-gray-300 bg-white shadow-sm transition-all hover:border-gray-400">
+      <div class="p-5 flex-1">
+        <h3 class="text-lg font-bold text-gray-900">JWT</h3>
+        <p class="mt-2 text-gray-600">내용입니다.</p>
+      </div>
+      <div class="border-t border-gray-200 px-5 py-3 flex justify-end items-center">
+        <div class="flex items-center gap-x-1.5 text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+          </svg>
+          <span class="text-sm font-medium">2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const overlay = document.getElementById('modal-overlay');
+    const card = document.getElementById('modal-card');
 
-      // ── 공통 입력 필드(ID,비번,학생번호) / 버튼 클래스
-      const inputClass = `w-full border border-gray-200 rounded-lg px-4 py-3
+    // ── 공통 입력 필드(ID,비번,학생번호) / 버튼 클래스
+    const inputClass = `w-full border border-gray-200 rounded-lg px-4 py-3
         text-sm text-gray-800 placeholder-gray-400 bg-gray-50
         focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-800/10
         transition-all duration-150`;
 
-      const btnClass = `w-full bg-gray-900 text-white font-medium text-sm tracking-wide
+    const btnClass = `w-full bg-gray-900 text-white font-medium text-sm tracking-wide
         rounded-xl py-3.5 mb-4 hover:bg-gray-700 active:scale-[0.98]
         transition-all duration-150 cursor-pointer`;
-      // 로그인 템플릿
-      function loginTemplate() {
-        return `
+    // 로그인 템플릿
+    function loginTemplate() {
+      return `
           <button onclick="closeModal()" aria-label="닫기"
                   class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
                          rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100
@@ -181,10 +191,10 @@
              class="text-right text-xs text-gray-400 hover:text-gray-700 cursor-pointer transition-colors duration-150">
             회원가입
           </p>`;
-      }
-      // 회원가입 템플릿
-      function signupTemplate() {
-        return `
+    }
+    // 회원가입 템플릿
+    function signupTemplate() {
+      return `
           <button onclick="closeModal()" aria-label="닫기"
                   class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
                          rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100
@@ -204,88 +214,85 @@
              class="text-right text-xs text-gray-400 hover:text-gray-700 cursor-pointer transition-colors duration-150">
             이미 계정이 있으신가요? 로그인
           </p>`;
-      }
+    }
 
-      function openModal(type) {
-        // 모달 안을 해당 템플릿으로 교체
-        card.innerHTML = type === 'login' ? loginTemplate() : signupTemplate();
+    function openModal(type) {
+      // 모달 안을 해당 템플릿으로 교체
+      card.innerHTML = type === 'login' ? loginTemplate() : signupTemplate();
 
-        // 오버레이
-        overlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+      // 오버레이
+      overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
 
-      }
+    }
 
-      function closeModal() {
-        overlay.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
+    function closeModal() {
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
 
-      // 로그인 처리 함수
-      async function handleLogin() {
-        const id = document.getElementById('user-id').value.trim();
-        const pw = document.getElementById('user-pw').value.trim();
+    // 로그인 처리 함수
+    async function handleLogin() {
+      const id = document.getElementById('user-id').value.trim();
+      const pw = document.getElementById('user-pw').value.trim();
 
-        if (id && pw) {
-          const response = await fetch("/auth/login", {
-            method: "POST",
-            headers : { "Content-Type": "appllication/json"},
-            body: JSON.stringify({input_id: id, input_pwd: pw})
-          });
-
-          const jsonData = await response.json();
-          console.log(jsonData);
-
-          if(jsonData.result==="success"){
-            alert(`${id}님, 환영합니다! 로컬보관쿠키: ${jsonData.msg}`);
-            closeModal();
-          }
-          else{
-            alert("로그인 실패")
-          }
-
-        } 
-      }
-
-      // 회원가입 처리함수
-      function handleSignup() {
-        const id      = document.getElementById('su-id').value.trim();
-        const pw      = document.getElementById('su-pw').value.trim();
-        const student = document.getElementById('su-student').value.trim();
-        if (id && pw && student) { alert(`${id}님, 회원가입 완료!`); closeModal(); }
-        else                     { alert('모든 항목을 입력해주세요.'); }
-      }
-
-      // 배경 클릭 / ESC 닫기 
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-
-      function switchTab(e, contentId) {
-        // 1. 모든 콘텐츠 숨기기
-        document
-          .querySelectorAll(".tab-pane")
-          .forEach((p) => p.classList.add("hidden"));
-
-        // 2. 모든 버튼 스타일 초기화
-        document.querySelectorAll(".tab-link").forEach((btn) => {
-          btn.classList.replace("text-gray-900", "text-gray-400");
-          btn.classList.replace("font-bold", "font-medium");
-          btn
-            .querySelector(".indicator")
-            .classList.replace("bg-gray-900", "bg-transparent");
+      if (id && pw) {
+        const response = await fetch("/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "appllication/json" },
+          body: JSON.stringify({ input_id: id, input_pwd: pw })
         });
 
-        // 3. 클릭된 탭 활성화
-        document.getElementById(contentId).classList.remove("hidden");
-        const activeBtn = e.currentTarget;
-        activeBtn.classList.replace("text-gray-400", "text-gray-900");
-        activeBtn.classList.replace("font-medium", "font-bold");
-        activeBtn
-          .querySelector(".indicator")
-          .classList.replace("bg-transparent", "bg-gray-900");
+        const jsonData = await response.json();
+        console.log(jsonData);
+
+        if (jsonData.result === "success") {
+          alert(`${id}님, 환영합니다! 로컬보관쿠키: ${jsonData.msg}`);
+          closeModal();
+        }
+        else {
+          alert("로그인 실패")
+        }
+
       }
-    </script>
+    }
+
+    // 회원가입 처리함수
+    function handleSignup() {
+      const id = document.getElementById('su-id').value.trim();
+      const pw = document.getElementById('su-pw').value.trim();
+      const student = document.getElementById('su-student').value.trim();
+      if (id && pw && student) { alert(`${id}님, 회원가입 완료!`); closeModal(); }
+      else { alert('모든 항목을 입력해주세요.'); }
+    }
+
+    // 배경 클릭 / ESC 닫기 
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+
+    function switchTab(e, contentId) {
+      document
+        .querySelectorAll(".tab-pane")
+        .forEach((p) => p.classList.add("hidden"));
+
+      document.querySelectorAll(".tab-link").forEach((btn) => {
+        btn.classList.replace("text-gray-900", "text-gray-400");
+        btn.classList.replace("font-bold", "font-medium");
+        btn
+          .querySelector(".indicator")
+          .classList.replace("bg-gray-900", "bg-transparent");
+      });
+
+      document.getElementById(contentId).classList.remove("hidden");
+      const activeBtn = e.currentTarget;
+      activeBtn.classList.replace("text-gray-400", "text-gray-900");
+      activeBtn.classList.replace("font-medium", "font-bold");
+      activeBtn
+        .querySelector(".indicator")
+        .classList.replace("bg-transparent", "bg-gray-900");
+    }
+  </script>
 </body>
 
 </html>
