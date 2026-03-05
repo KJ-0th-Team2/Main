@@ -200,6 +200,7 @@ class JungleNav extends HTMLElement {
           bubbles: true,
         }));
         alert(`${id}님, 환영합니다!`);
+        localStorage.setItem('access_token', data.access_token);
         this._closeModal();
       } else {
         alert('로그인 실패: ' + (data.msg || '아이디 또는 비밀번호를 확인하세요.'));
