@@ -1,7 +1,8 @@
 from flask_jwt_extended import *
-from datetime import timedelta
+from datetime import timedelta # refresh 토큰 시간제한
 from flask import render_template, Blueprint, request, jsonify, make_response
-from db import db
+from db import db # 순환 호출 에러 해결용
+import re # 정규 표현식 용도
 
 bp = Blueprint('account', __name__)
 
@@ -9,16 +10,31 @@ bp = Blueprint('account', __name__)
 def loginpage():
     return render_template('loginpage.html')
 
-# 회원가입 기능 임시 비활성화
+# 회원가입
+@bp.route("/user/post", methods=['POST'])
+def register():
+    member_id = request.json['input_num']
+    id_receive = request.json['input_id']
+    pw_receive = request.json['input_pwd']
 
-# @bp.route("/user/post", methods=['POST'])
-# def register():
-#     id_receive = request.json['input_id']
-#     pw_receive = request.json['input_pwd']
+    if not re.match(r'[a-z0-9]+$', id_receive):
+        return jsonify({
+            'result': 'fail',
+            'msg': '아이디는 소문자와 숫자만 가능합니다.'
+        }), 403
+    if member_id is None or pw_receive is None:
+        return jsonify({
+            'result': 'fail',
+            'msg': '모든 칸을 입력해주세요.'
+        }), 403
 
 
-#     return
 
+
+    return
+
+# 아이디 중복확인
+@bp.route("/")
 
 @bp.route("/auth/tokentest", methods=['GET'])
 # 밑에 jwt_required로 토큰 검사
@@ -79,3 +95,19 @@ def login():
     response.set_cookie("refresh_token_cookie", refresh_token, httponly=True)
 
     return response
+
+@bp.route("/auth/logout", methods=['DELETE'])
+@jwt_required(refresh=True)
+def logout():
+    response = make_response(jsonify({
+        'result': 'success',
+        'msg': '로그아웃 완료'
+    }), 200)
+
+    unset_jwt_cookies(response)
+    return response
+
+@bp.route("/user/me", methods=['GET'])
+@jwt_required()
+def login_check():
+    return jsonify({"logedin": True})
