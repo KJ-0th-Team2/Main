@@ -19,7 +19,7 @@ def get_cards():
     cards = list(db.jungle_wiki.find({}).sort(field, order))
     return jsonify(cards)
 
-bp.route("/cards", methods=["POST"])
+@bp.route("/cards", methods=["POST"])
 # 로그인 상태 데코레이터함수 넣기
 # 로그인 상태함수 내부에는 엑세스토큰 확인하고 user_id 꺼내서 사용
 def card_post():
@@ -48,3 +48,24 @@ def card_post():
         print(e)
         return jsonify({"result":"fail", "msg":"등록 실패하였습니다."}),500
 
+@db.route("/cards/search", methods=["GET"])
+def search_card():
+
+    keyword = request.args.get("keyword")
+    if not keyword:
+        return jsonify({"result":"fail", "msg":"검색어를 입력해주세요"}), 401
+    try:
+        find_cards = list(db.jungle_wiki.find({"title":{"$regex":keyword, "#options": "i"} },{"_id":1, "title":1}))
+        for card in find_cards:
+            # Objdctd는 JSON 직렬화 불가로 str변환 필요
+            card["_id"] = str(card["_id"]) 
+
+        if not find_cards:
+            return jsonify({"result":"fail", "msg":"검색 결과가 없음"}), 404
+        
+        return jsonify({"result":"success", "msg":"해당카드 찾기 성공", "data":find_cards}), 200
+    except:
+        return jsonify({"result":"fail", "msg":"서버오류"}),500
+        
+
+ 
