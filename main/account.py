@@ -27,14 +27,12 @@ def register():
             'result': 'fail',
             'msg': '모든 칸을 입력해주세요.'
         }), 403
-
-
+    
 
 
     return
 
 # 아이디 중복확인
-@bp.route("/")
 
 @bp.route("/auth/tokentest", methods=['GET'])
 # 밑에 jwt_required로 토큰 검사
