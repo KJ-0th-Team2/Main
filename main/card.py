@@ -9,57 +9,67 @@ bp = Blueprint('card',__name__)
 
 @bp.route("/api/cards", methods=["GET"])
 def get_cards():
-    sort_param = request.args.get("sort","latest")
-    page = int(request.args.get("page", 1)) 
+    sort_param = request.args.get("sort", "latest")
+    page = int(request.args.get("page", 1))
     per_page = 9
-    SORT_MAP ={
+    SORT_MAP = {
         "latest": ("created_at", -1),
-          "oldest": ("created_at",1),
+        "oldest": ("created_at", 1),
     }
     field, order = SORT_MAP.get(sort_param, ("created_at", -1))
     try:
-        cards = list(db.card.find({}).sort(field, order)).skip((page - 1) * per_page).limit(per_page)
-        # return jsonify({"result": "success", "data": serialize_id(cards)}), 200
-        # jinja2
-        return render_template("cards.html", cards=serialize_id(cards)),200
+        pipeline = [
+            {"$sort": {"version": -1}},
+            {"$group": {
+                "_id": "$title",
+                "doc": {"$first": "$$ROOT"}
+            }},
+            {"$replaceRoot": {"newRoot": "$doc"}},
+            {"$sort": {field: order}},
+            {"$skip": (page - 1) * per_page},
+            {"$limit": per_page},
+        ]
+        cards = list(db.card.aggregate(pipeline))
+        print("카드 수:", len(cards))  # ← 추가
+        for c in cards:
+            print(c.get("title"), c.get("version"))  # ← 추가
+        return render_template("cards.html", cards=serialize_id(cards)), 200
     except Exception as e:
-        print(e)
-        #return jsonify({"result": "fail", "msg": "서버 오류"}), 500
-        # jinja2
+        print("에러:", e)  # ← 에러 내용 확인
         return render_template("error.html", msg="서버 오류"), 500
 
-@bp.route("/api/cards", methods=["POST"])
 # 로그인 상태 데코레이터함수 넣기
 # 로그인 상태함수 내부에는 엑세스토큰 확인하고 user_id 꺼내서 사용
+@bp.route("/api/cards", methods=["POST"])
 @jwt_required()
 def card_post():
     user_id = get_jwt_identity()
     input_data = request.get_json()
     title = input_data.get("title")
     content = input_data.get("content")
-    print(title, content)
 
     if not title or not content:
-        return jsonify({"result":"fail", "msg":"제목과 내용은 필수 항목입니다."}), 400
-    
+        return jsonify({"result": "fail", "msg": "제목과 내용은 필수 항목입니다."}), 400
 
-    card={
-        "title":title,
-        "content":content,
-        "version":1,
+    # 같은 title 중 가장 높은 version 찾기
+    existing = db.card.find_one({"title": title}, sort=[("version", -1)])
+    next_version = existing["version"] + 1 if existing else 1
+
+    card = {
+        "title": title,
+        "content": content,
+        "version": next_version,
         "created_at": datetime.now(),
-        "comment_count":0,
-        "author":user_id
-        # "projects":[]
+        "comment_count": 0,
+        "author": user_id
     }
 
-    try: 
-        result = db.card.insert_one(card)
-        return jsonify({"result":"sucess", "msg":"등록이 완료되었습니다."}),200
-    
+    try:
+        db.card.insert_one(card)
+        return jsonify({"result": "success", "msg": "등록이 완료되었습니다."}), 200
     except Exception as e:
         print(e)
-        return jsonify({"result":"fail", "msg":"등록 실패하였습니다."}),500
+        return jsonify({"result": "fail", "msg": "등록 실패하였습니다."}), 500
 
 @bp.route("/api/cards/search", methods=["GET"])
 def search_card():
