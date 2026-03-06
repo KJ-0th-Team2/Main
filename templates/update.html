@@ -19,7 +19,7 @@
   <div class="max-w-5xl mx-auto p-10 font-sans text-gray-900">
 
     <div class="flex justify-between items-baseline mb-8">
-      <h1 class="text-5xl font-extrabold tracking-tight">JWT</h1>
+      <h1 id="page-title" class="text-5xl font-extrabold tracking-tight"></h1>
       <div class="text-gray-400 text-sm">
         <span>수정일 26.03.04</span>
         <span class="ml-2">v1</span>
@@ -29,6 +29,9 @@
     <div class="flex flex-col md:flex-row gap-10">
 
       <div class="flex-1 flex flex-col">
+        <input type="text" id="title-input" placeholder="제목을 입력하세요"
+          class="h-14 px-4 text-gray-800 font-bold bg-white outline-none border border-gray-300 placeholder-gray-500 w-full rounded-md focus:border-gray-800 transition-colors mb-4" />
+
         <div id="editor" class="bg-white rounded-md overflow-hidden"></div>
 
         <div class="flex justify-center mt-10">
@@ -48,24 +51,61 @@
       </div>
 
     </div>
-
-
-
   </div>
 
   <script>
+    // ✅ localStorage에서 카드 데이터 꺼내기
+    const card = JSON.parse(localStorage.getItem('edit_card'));
+
+    if (!card) {
+      alert('수정할 카드 정보가 없습니다.');
+      window.location.href = '/';
+    }
+
+    // 제목 채우기
+    document.getElementById('title-input').value = card.title;
+    document.getElementById('page-title').textContent = card.title;
+
+    // 에디터 초기화 + 내용 채우기
     const editor = new toastui.Editor({
       el: document.querySelector('#editor'),
       height: '500px',
       initialEditType: 'wysiwyg',
       previewStyle: 'vertical',
-      placeholder: '본문 내용을 작성해 주세요...',
+      initialValue: card.content,
     });
 
+    // ✅ 수정 확인 버튼 → PATCH 요청
     document.getElementById('submit-btn').addEventListener('click', async () => {
-  
+      const title = document.getElementById('title-input').value.trim();
       const content = editor.getMarkdown();
-      console.log('수정 내용:', content);
+
+      if (!title) { alert('제목을 입력해주세요.'); return; }
+      if (!content) { alert('내용을 입력해주세요.'); return; }
+
+      try {
+        const res = await fetch(`/api/cards/${card._id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({ title, content })
+        });
+
+        const data = await res.json();
+
+        if (data.result === 'success') {
+          alert('수정이 완료되었습니다.');
+          localStorage.removeItem('edit_card');
+          window.location.href = '/detail/' + card._id;
+        } else {
+          alert(data.msg || '수정에 실패했습니다.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+      }
     });
   </script>
 </body>

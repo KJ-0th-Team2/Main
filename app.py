@@ -12,7 +12,7 @@ app.config.update(
     DEBUG = True,
     JWT_TOKEN_LOCATION = ['headers','cookies'],
     JWT_COOKIE_CSRF_PROTECT = False,
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=5),
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=180),
     JWT_SECRET_KEY = "123"
 )
 
