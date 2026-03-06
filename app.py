@@ -25,6 +25,7 @@ app.register_blueprint(card.bp)
 
 user = db.user.find_one({'username':'test'})
 
+
 if not user:
     # 반환값 없으면 유저 하나 만들기
     passwd = '123'
