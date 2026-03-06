@@ -4,13 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-
-  <title>정글위키</title>
-
+  <title>{{ card.title }} - 정글위키</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="/static/jungle-nav.js"></script>
-
   <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 </head>
@@ -18,35 +14,27 @@
 <body>
   <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
 
-  </div>
   <div class="max-w-4xl mx-auto p-10 font-sans text-gray-900">
-
     <div class="flex justify-between items-baseline mb-8">
-      <h1 class="text-5xl font-extrabold tracking-tight">JWT</h1>
+      <h1 class="text-5xl font-extrabold tracking-tight">{{ card.title }}</h1>
       <div class="text-gray-400 text-sm">
-        <span>수정일 26.03.04</span>
+        <span>수정일 {{ card.updated_at or '26.03.04' }}</span>
         <span class="ml-2">v1</span>
       </div>
     </div>
 
     <div class="flex flex-col md:flex-row gap-8 mb-4">
-
       <div class="flex-1 flex flex-col justify-between min-h-[250px]">
-        <p class="text-xl font-medium tracking-tight mt-2">
-          이론입니다. 어쩌구 저쩌구이론입니다. 어쩌구 저쩌구
-        </p>
+        <div id="editor" class="bg-white rounded-md overflow-hidden"></div>
 
         <div class="flex justify-end gap-3 text-gray-700 mt-8">
-          <svg class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          <svg class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
             </path>
           </svg>
-          <svg class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <svg class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
       </div>
@@ -59,15 +47,22 @@
         </ul>
       </div>
     </div>
-
     <hr class="border-gray-400 my-4" />
+  </div>
 
+  <script>
+    // 서버에서 넘겨준 content 데이터를 안전하게 가져옴
+    const initialContent = "{{ card.content | safe }}";
 
-
-
-
-
-
+    const editor = new toastui.Editor({
+      el: document.querySelector('#editor'),
+      height: '400px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      initialValue: initialContent, // 여기에 데이터 바인딩
+      language: 'ko-KR'
+    });
+  </script>
 </body>
 
 </html>

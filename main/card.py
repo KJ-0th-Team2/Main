@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, request, jsonify
 from db import db
+from bson import ObjectId
 from datetime import datetime
 from utils import serialize_id
 from utils import to_object_id
@@ -17,12 +18,10 @@ def get_cards():
     field, order = SORT_MAP.get(sort_param, ("created_at", -1))
     try:
         cards = list(db.card.find({}).sort(field, order))
-        # return jsonify({"result": "success", "data": serialize_id(cards)}), 200
         # jinja2
         return render_template("cards.html", cards=serialize_id(cards)),200
     except Exception as e:
         print(e)
-        #return jsonify({"result": "fail", "msg": "서버 오류"}), 500
         # jinja2
         return render_template("error.html", msg="서버 오류"), 500
 
@@ -65,7 +64,7 @@ def search_card():
     if not keyword:
         return jsonify({"result":"fail", "msg":"검색어를 입력해주세요"}), 401
     try:
-        find_cards = list(db.card.find({"title":{"$regex":keyword, "#options": "i"} },{"_id":1, "title":1}))
+        find_cards = list(db.card.find({"title":{"$regex":keyword, "$options": "i"} },{"_id":1, "title":1}))
       
 
         if not find_cards:
@@ -107,6 +106,26 @@ def card_edit(cardId):
         else:
             return jsonify({"result":"fail", "msg":"수정 실패"}), 500
     except Exception as e: 
+        print(e)
+        return jsonify({ "result":"fail", "msg":"서버오류"}), 500
+    
+
+@bp.route("/api/cards/<cardId>", methods=["GET"])
+def card_detail(cardId):
+    try:
+        obj_id = to_object_id(cardId)
+        if not obj_id:
+            return jsonify({"result":"fail","msg":"잘못된 id"}), 400
+        find_card = db.card.find_one({"_id": obj_id})
+        if not find_card:
+            return jsonify({"result":"fail","msg":"해당 카드 없음"}), 404
+        find_card = serialize_id(find_card)
+        return jsonify({
+            "result":"success",
+            "msg":"해당 상세페이지 찾음",
+            "data": find_card
+        }), 200
+    except Exception as e:
         print(e)
         return jsonify({ "result":"fail", "msg":"서버오류"}), 500
     

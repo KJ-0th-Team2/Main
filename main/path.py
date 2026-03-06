@@ -27,6 +27,7 @@ def history():
 def index():
     # 1. 정렬 파라미터 가져오기
     sort_param = request.args.get("sort", "latest")
+    keyword = request.args.get("keyword", "") 
     
     # 2. 정렬 맵 구성 (latest는 -1, old는 1)
     SORT_MAP = {
@@ -42,7 +43,8 @@ def index():
     try:
         # 3. DB 조회 및 정렬 적용
         # db 객체는 이미 jungle_wiki DB를 가리키므로 컬렉션 이름인 card를 사용합니다.
-        cards_cursor = list(db.card.find({}).sort(field, order))
+        query = {"title": {"$regex": keyword, "$options": "i"}} if keyword else {}
+        cards_cursor = list(db.card.find(query).sort(field, order))
         
         # 4. ObjectId 문자열 변환
         serialized_cards = serialize_id(cards_cursor)
@@ -51,7 +53,7 @@ def index():
         project_cards = serialize_id(list(db.project_card.find()))
         
         # 5. 템플릿 렌더링
-        return render_template("index.html", cards=serialized_cards, project_cards = project_cards)
+        return render_template("index.html", cards=serialized_cards, keyword=keyword)
         
     except Exception as e:
         print(f"Error: {e}")
