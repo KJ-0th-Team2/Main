@@ -91,38 +91,40 @@ def search_card():
 
 @bp.route("/api/cards/<cardId>", methods=["PATCH"])
 def card_edit(cardId):
-
     input_data = request.get_json()
     title = input_data.get("title")
     content = input_data.get("content")
 
-    try:
-        if not title or not content:
-            return jsonify({"result":"fail","msg":"제목과 내용은 필수입니다."}),400
-        
-        find_edit = db.card.find_one({"_id":to_object_id(cardId)})
-    
-        obj_id = to_object_id(cardId)
+    if not title or not content:
+        return jsonify({"result": "fail", "msg": "제목과 내용은 필수입니다."}), 400
 
+    try:
+        obj_id = to_object_id(cardId)
         if not obj_id:
-            return jsonify({"result":"fail","msg":"잘못된 id"}),400
-    
+            return jsonify({"result": "fail", "msg": "잘못된 id"}), 400
+
         find_edit = db.card.find_one({"_id": obj_id})
         if not find_edit:
-            return jsonify({"result":"fail","msg":"해당 카드 없음"}),404
-        
-        if title == find_edit.get("title") and content == find_edit.get("content"):
-            return jsonify({"result":"fail", "msg":"변경된 내용이 없습니다."}), 400
+            return jsonify({"result": "fail", "msg": "해당 카드 없음"}), 404
 
-        result = db.card.update_one({"_id": obj_id},{"$set":{"title": title,"content": content}, "$inc":{ "version":1 }})
-        if result.matched_count == 1:
-            return jsonify({"result":"success", "msg":"수정 완료"}),200
-        else:
-            return jsonify({"result":"fail", "msg":"수정 실패"}), 500
-    except Exception as e: 
+        if title == find_edit.get("title") and content == find_edit.get("content"):
+            return jsonify({"result": "fail", "msg": "변경된 내용이 없습니다."}), 400
+
+        new_card = {
+            "title": title,
+            "content": content,
+            "version": find_edit.get("version", 1) + 1,
+            "created_at": datetime.now(),
+            "comment_count": 0,
+            "author": find_edit.get("author")
+        }
+
+        db.card.insert_one(new_card)
+        return jsonify({"result": "success", "msg": "수정 완료"}), 200
+
+    except Exception as e:
         print(e)
-        return jsonify({ "result":"fail", "msg":"서버오류"}), 500
-    
+        return jsonify({"result": "fail", "msg": "서버오류"}), 500
 
 @bp.route("/api/cards/<cardId>", methods=["GET"])
 def card_detail(cardId):
