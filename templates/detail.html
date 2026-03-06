@@ -19,8 +19,8 @@
       <h1 class="text-5xl font-extrabold tracking-tight">{{ card.title }}</h1>
 
       <div class="text-gray-400 text-sm">
-        <span>수정일 {{ card.updated_at or '26.03.04' }}</span>
-        <span class="ml-2">v1</span>
+        <span>수정일 {{ card.created_at.strftime('%y.%m.%d') if card.created_at else '-' }}</span>
+        <span class="ml-2">v{{ card.version }}</span>
       </div>
 
     </div>
