@@ -5,31 +5,36 @@ from datetime import datetime
 from utils import serialize_id
 from utils import to_object_id
 
+
 bp = Blueprint('card',__name__)
 
 @bp.route("/api/cards", methods=["GET"])
-#페이지 네이션 적용
 def get_cards():
     sort_param = request.args.get("sort","latest")
+    page = int(request.args.get("page", 1)) 
+    per_page = 9
     SORT_MAP ={
         "latest": ("created_at", -1),
-        "views": ("view_count",-1)
+          "oldest": ("created_at",1),
     }
     field, order = SORT_MAP.get(sort_param, ("created_at", -1))
     try:
-        cards = list(db.card.find({}).sort(field, order))
+        cards = list(db.card.find({}).sort(field, order)).skip((page - 1) * per_page).limit(per_page)
+        # return jsonify({"result": "success", "data": serialize_id(cards)}), 200
         # jinja2
         return render_template("cards.html", cards=serialize_id(cards)),200
     except Exception as e:
         print(e)
+        #return jsonify({"result": "fail", "msg": "서버 오류"}), 500
         # jinja2
         return render_template("error.html", msg="서버 오류"), 500
 
 @bp.route("/api/cards", methods=["POST"])
 # 로그인 상태 데코레이터함수 넣기
 # 로그인 상태함수 내부에는 엑세스토큰 확인하고 user_id 꺼내서 사용
+@jwt_required()
 def card_post():
-
+    user_id = get_jwt_identity()
     input_data = request.get_json()
     title = input_data.get("title")
     content = input_data.get("content")
@@ -45,8 +50,8 @@ def card_post():
         "version":1,
         "created_at": datetime.now(),
         "comment_count":0,
+        "author":user_id
         # "projects":[]
-        # "author":user_id
     }
 
     try: 
@@ -120,11 +125,7 @@ def card_detail(cardId):
         if not find_card:
             return jsonify({"result":"fail","msg":"해당 카드 없음"}), 404
         find_card = serialize_id(find_card)
-        return jsonify({
-            "result":"success",
-            "msg":"해당 상세페이지 찾음",
-            "data": find_card
-        }), 200
+        return jsonify({"result":"success", "msg":"해당 상세페이지 찾음", "data": find_card}), 200
     except Exception as e:
         print(e)
         return jsonify({ "result":"fail", "msg":"서버오류"}), 500
