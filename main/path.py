@@ -1,15 +1,23 @@
-from flask import render_template, Blueprint,request
-
+from flask import render_template, Blueprint, request
 from db import db
-from utils import serialize_id
+from utils import serialize_id, to_object_id
 
 #
 bp = Blueprint('path', __name__)
 
 
-@bp.route('/detail')
-def detail():
-    return render_template('detail.html')
+@bp.route('/detail/<cardId>')
+def detail(cardId):
+    obj_id = to_object_id(cardId)
+    if not obj_id:
+        return "잘못된 ID", 400
+    
+    find_card = db.card.find_one({"_id": obj_id})
+    if not find_card:
+        return "카드 없음", 404
+    
+    find_card = serialize_id(find_card)
+    return render_template('detail.html', card=find_card)
 
 @bp.route('/upload')
 def upload():

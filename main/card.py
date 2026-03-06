@@ -128,4 +128,3 @@ def card_detail(cardId):
     except Exception as e:
         print(e)
         return jsonify({ "result":"fail", "msg":"서버오류"}), 500
-    

@@ -86,15 +86,7 @@ if prcard is None:
     }
     db.project_card.insert_one(card_data)
 else:
-    print("있으면 다른 데이터")
-
-    card_data = {
-        'title' : '무한 도전',
-        'content' : '유재석과 정준하가 시도한 말도안되는 도전기',
-        'team' : 3,
-        'member' : ['유재석', '박명수', '정준하']
-    }
-    db.project_card.insert_one(card_data)
+    print("dd")
     
 
 

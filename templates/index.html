@@ -123,7 +123,7 @@
       card.addEventListener('click', function () {
         const cardId = this.getAttribute('data-id');
         // 서버의 /card/<card_id> 경로로 이동
-        location.href = '/api/card/' + cardId;
+        location.href = '/detail/' + cardId;
       });
     });
   </script>
