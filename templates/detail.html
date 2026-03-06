@@ -51,18 +51,6 @@
   </div>
 
   <script>
-    // // 서버에서 넘겨준 content 데이터를 안전하게 가져옴
-    // const initialContent = "{{
-    //  card.content | safe }}";
-
-    // const editor = new toastui.Editor({
-    //   el: document.querySelector('#editor'),
-    //   height: '400px',
-    //   initialEditType: 'wysiwyg',
-    //   previewStyle: 'vertical',
-    //   initialValue: initialContent, // 여기에 데이터 바인딩
-    //   language: 'ko-KR'
-    // });
     const initialContent = {{ card.content | tojson }};
 
     toastui.Editor.factory({
