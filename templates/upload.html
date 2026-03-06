@@ -80,13 +80,13 @@
       };
 
       try {
+        
         // 백엔드 API 주소로 POST 요청 보내기 (예시 경로: /api/posts)
         const response = await fetch('/api/cards', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // 로그인이 필요하다면 아래처럼 토큰을 함께 보냅니다.
-            // 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }, body: JSON.stringify(postData)
         });
 

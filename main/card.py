@@ -2,8 +2,7 @@ from flask import render_template, Blueprint, request, jsonify
 from db import db
 from bson import ObjectId
 from datetime import datetime
-from utils import serialize_id
-from utils import to_object_id
+from utils import to_object_id, serialize_id
 from flask_jwt_extended import *
 
 bp = Blueprint('card',__name__)
