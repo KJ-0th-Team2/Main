@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from datetime import timedelta, datetime, timezone
 from db import db
-from main import common, account, path, card, project
+from main import common, account, path,card
 from flask_jwt_extended import *
 import bcrypt
 
@@ -22,9 +22,9 @@ app.register_blueprint(common.bp)
 app.register_blueprint(account.bp)
 app.register_blueprint(path.bp)
 app.register_blueprint(card.bp)
-app.register_blueprint(project.bp)
 
 user = db.user.find_one({'username':'test'})
+
 
 if not user:
     # 반환값 없으면 유저 하나 만들기
@@ -74,26 +74,6 @@ if not post:
 else:
     print("카드 이미 있음")
 
-
-prcard = list(db.project_card.find({}))
-
-if prcard is None:
-    card_data = {
-        'title' : '정글 위키와 함께하는 3박 4일간의 여정',
-        'content' : 'Jinja와 같은 새로운 기능, JWT를 이용한 보안 등, 다양한 도전을 시도해본 프로젝트',
-        'team' : 2,
-        'member' : ['이우진', '임재환', '임가인', '이창원']
-    }
-    db.project_card.insert_one(card_data)
-else:
-    print("dd")
-    
-
-
-# 서버용 코드
-
-# if __name__ == '__main__':
-#     app.run('0.0.0.0', port=5000, debug=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
