@@ -1,9 +1,10 @@
 from flask import render_template, Blueprint, request
 from db import db
-from utils import serialize_id, to_object_id
+from utils import serialize_id, to_object_id, strip_markdown 
 
 #
 bp = Blueprint('path', __name__)
+
 
 
 @bp.route('/detail/<cardId>')
@@ -56,6 +57,9 @@ def index():
         
         # 4. ObjectId 문자열 변환
         serialized_cards = serialize_id(cards_cursor)
+
+        for card in serialized_cards:
+            card['content'] = strip_markdown(card.get('content', ''))
 
         # project_card 데이터 find 및 나열하기
         project_cards = serialize_id(list(db.project_card.find()))
