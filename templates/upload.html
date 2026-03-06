@@ -36,15 +36,6 @@
           </button>
         </div>
       </div>
-
-      <div class="w-full md:w-48 border border-dashed border-gray-300 rounded-md p-5 h-max bg-white">
-        <h3 class="text-xs font-bold mb-3 text-gray-800">같이 본 키워드</h3>
-        <ul class="list-disc list-inside text-xs text-gray-800 space-y-1.5 pl-1">
-          <li>session</li>
-          <li>cookie</li>
-        </ul>
-      </div>
-
     </div>
   </div>
 
@@ -81,7 +72,7 @@
 
       try {
         // 백엔드 API 주소로 POST 요청 보내기 (예시 경로: /api/posts)
-        const response = await fetch('/api/cards', {
+        const response = await fetch('/cards', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
