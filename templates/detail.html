@@ -17,18 +17,22 @@
   <div class="max-w-4xl mx-auto p-10 font-sans text-gray-900">
     <div class="flex justify-between items-baseline mb-8">
       <h1 class="text-5xl font-extrabold tracking-tight">{{ card.title }}</h1>
+
       <div class="text-gray-400 text-sm">
         <span>수정일 {{ card.created_at.strftime('%y.%m.%d') if card.created_at else '-' }}</span>
         <span class="ml-2">v{{ card.version }}</span>
       </div>
+
     </div>
+    <hr class="border-t-2 border-gray-100 mb-8" />
 
     <div class="flex flex-col md:flex-row gap-8 mb-4">
       <div class="flex-1 flex flex-col justify-between min-h-[250px]">
         <div id="editor" class="bg-white rounded-md overflow-hidden"></div>
 
         <div class="flex justify-end gap-3 text-gray-700 mt-8">
-          <svg class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- ✅ 수정 아이콘: edit-btn 클래스 추가 -->
+          <svg id="edit-btn" class="w-6 h-6 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
             </path>
@@ -38,25 +42,24 @@
           </svg>
         </div>
       </div>
-
-      <div class="w-full md:w-52 border border-dashed border-gray-400 rounded-md p-5 h-max">
-        <h3 class="text-sm font-bold mb-3 text-gray-800">같이 본 키워드</h3>
-        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
-          <li>session</li>
-          <li>cookie</li>
-        </ul>
-      </div>
     </div>
     <hr class="border-gray-400 my-4" />
   </div>
 
   <script>
     const initialContent = {{ card.content | tojson }};
-    
+    const cardData = {{ card | tojson }};  // 카드 전체 데이터
+
     toastui.Editor.factory({
       el: document.querySelector('#editor'),
       viewer: true,
       initialValue: initialContent,
+    });
+
+    // ✅ 수정 아이콘 클릭 → localStorage에 저장 후 update 페이지로 이동
+    document.getElementById('edit-btn').addEventListener('click', () => {
+      localStorage.setItem('edit_card', JSON.stringify(cardData));
+      window.location.href = '/update';
     });
   </script>
 </body>
