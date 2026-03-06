@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정글위키 - 히스토리</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="/static/jungle-nav.js"></script>
+</head>
+
+<body class="bg-[#F4F4F4] min-h-screen">
+  <jungle-nav logo-text="정글 위키" logo-href="/"></jungle-nav>
+
+  <div class="max-w-5xl mx-auto my-12 bg-white p-16 shadow-sm min-h-[80vh] relative">
+
+    <div class="flex justify-between items-center mb-4">
+    <h1 class="text-5xl font-bold tracking-tighter">{{ title }}</h1>
+    <button onclick="location.href='/detail/{{ histories[0]._id }}'"
+        class="shrink-0 px-3 py-1 border border-gray-400 rounded text-sm hover:bg-gray-50 transition-colors cursor-pointer">
+        최신 게시글 보기
+    </button>
+    </div>
+
+    <hr class="border-gray-300 mb-8" />
+
+    <div class="flex flex-col md:flex-row gap-12">
+      <div class="flex-1">
+        <ul class="space-y-3">
+        {% for h in histories %}
+        <li class="flex items-center gap-3 text-sm text-gray-700">
+            <span class="text-gray-400">•</span>
+            <span class="w-36 shrink-0">{{ h.created_at }}</span>
+            <span class="text-gray-300">|</span>
+            <span>v{{ h.version }}</span>
+            <span class="text-gray-300">|</span>
+            <a href="/detail/{{ h._id }}" class="text-blue-600 hover:underline">보기</a>
+            <span class="text-gray-300">|</span>
+            <span>{{ h.author or '-' }}</span>
+        </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

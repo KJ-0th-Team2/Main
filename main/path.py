@@ -28,10 +28,14 @@ def upload():
 def update():
     return render_template('update.html')
 
-@bp.route('/history')
-def history():
-    return render_template('history.html')
-
+@bp.route('/history/<title>')
+def history(title):
+    histories = list(db.card.find({"title": title}).sort("version", -1))
+    for h in histories:
+        if h.get('created_at'):
+            h['created_at'] = h['created_at'].strftime('%Y-%m-%d %H:%M')
+    histories = serialize_id(histories)
+    return render_template('history.html', histories=histories, title=title)
 
 @bp.route("/")
 def index():
